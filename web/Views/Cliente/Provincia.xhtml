@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                
+                
+                
+                <p:panel header="Datos de la Provincia">
+                    
+                    <p:panel>
+                        <p:fieldset legend="Datos de la Provincia">
+                            <h:form id="frmMostrarProvincia" >
+                            <p:panelGrid columns="8" styleClass="noBorders">
+                                
+                                <p:outputLabel for="txtCodigo" value="CODIGO: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCodigo" value="#{provinciaLocalidadBean.provincia.idProvincia} " />
+
+                                <p:outputLabel for="txtNombre" value="NOMBRE:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtNombre" value="#{provinciaLocalidadBean.provincia.nomProvincia}" />
+
+                                <p:outputLabel for="txtLastUpdate" value="ACTUALIZADO:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtLastUpdate" value="#{provinciaLocalidadBean.provincia.lastUpdate}" />
+                                
+                                <p:outputLabel for="txtUserUpdate" value="ADMINISTRADO POR:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtUserUpdate" value="#{provinciaLocalidadBean.provincia.userUpdate}" />
+                                
+                            </p:panelGrid>
+                            </h:form>
+                        </p:fieldset>
+                    </p:panel>
+                    
+                    <p:panel header="Localidades">
+                         <h3> Localidades de esta Provincia</h3>
+                         
+                         <p:accordionPanel id="acordionLocalidades" dynamic="true" cache="true">
+                             <p:tab id="tabMostrarLocalidades" title="Lista de Localidades">
+                                 <h:form id="frmMostrarLocalidades">
+
+                                     <p:dataTable id="tablaLocalidades" paginator ="true" paginatorPosition ="top" 
+                                                  rows="30" var="l" value="#{provinciaLocalidadBean.provincia.localidads}" 
+                                                  emptyMessage = "No hay datos de Localidades">
+                                         <f:facet name="header">Lista de Localidades</f:facet>
+
+                                         <p:column headerText="CODIGO" style="width:50px;text-align: center">
+                                             <h:outputText value="#{l.idLocalidad}" />
+                                         </p:column>
+                                         <p:column headerText="NOMBRE" style="width:250px;text-align: center">
+                                             <h:outputText value="#{l.nomLocalidad}" />
+                                         </p:column>    
+                                        
+                                         <p:column headerText="MODIFICADO" style="width:100px;text-align: center">
+                                             <h:outputText value="#{l.lastUpdate}" />
+                                         </p:column>
+                                         <p:column headerText="ADMINISTRADO POR" style="width:100px;text-align: center">
+                                             <h:outputText value="#{l.userUpdate}" />
+                                         </p:column>
+                                         <p:column style="width:100px;text-align: center">
+                                             <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                                 <p:commandButton oncomplete="PF('_dlgEditarLocalidad').show();" 
+                                                                  icon="ui-icon-pencil"
+                                                                  title="Modificar Localidad"
+                                                                  update = ":formEditarLocalidad">
+                                                     <f:setPropertyActionListener target="#{provinciaLocalidadBean.localidad}" 
+                                                                                  value="#{l}"/>
+                                                     <f:setPropertyActionListener target="#{provinciaLocalidadBean.actualizarTabla}"
+                                                     value="acordionLocalidades:frmMostrarLocalidades" /> 
+                                                 </p:commandButton>    
+                                                 <p:commandButton oncomplete="PF('_dlgEliminarLocalidad').show();"
+                                                                  update=":dlgEliminarLocalidad"
+                                                                  icon="ui-icon-trash" title="Eliminar Localidad">
+                                                     <f:setPropertyActionListener value="#{l}" target="#{provinciaLocalidadBean.localidad}" />
+                                                     <f:setPropertyActionListener target="#{provinciaLocalidadBean.actualizarTabla}"
+                                                     value="acordionLocalidades:frmMostrarLocalidades" /> 
+                                                 </p:commandButton>
+                                             </p:panelGrid>    
+                                         </p:column>
+                                         
+                                         
+                                         
+                                     </p:dataTable>
+                                 </h:form>  
+
+
+                             </p:tab>
+        
+                        </p:accordionPanel>
+ 
+                    </p:panel>
+            
+                </p:panel>
+                
+                <!--  ============================================================================================================-->
+
+                <ui:insert name="dialogs" > 
+                <ui:include src="dialogLocalidad.xhtml"/>
+
+                </ui:insert>
+                <!--  ============================================================================================================-->
+
+                
+                
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

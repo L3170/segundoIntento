@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+
+
+    <ui:composition>
+
+        <!-- ============================================================================ -->                
+        <!-- =====================    Nuevo Fecaereq ==================================== -->                        
+        <!-- ============================================================================ -->                
+
+        <p:dialog id="dlgNuevoFecereq" header="Nuevo FECAEReq" widgetVar="_dlgNuevoFecaereq"
+                  resizable="false" modal="true" showEffect="explode" hideEffect="explode" 
+                  positionType="absolute"
+                  width="80%" height="500px" >
+            <h:form id="frmNuevoFecaereq">
+                <p:messages id="mensaje" autoUpdate="true"/>
+
+                <p:wizard  style="width:800px;height:auto;">
+                    <p:tab id="tabFECAEReq" title="Fecaereq">
+                        <p:panel header="Datos Fecaereq">
+                            
+
+                            <p:panelGrid  id="display"  columns="2" styleClass="noBorders" style="margin: 0 auto;">
+
+                                
+                                <p:outputLabel for="somNewTipoCbte"  value="Tipo Cbte: "/>
+                                <p:selectOneMenu id="somNewTipoCbte"  value="#{fecaereqBean.fecaereq.cteTipo}"
+                                                 required="true"
+                                                 requiredMessage="tipo Cbte: seleccione uno"
+                                                 converter="selectOneMenuConverter"
+                                                 onchange="PF('tblAgregarComprobante').filter()">
+                                <f:selectItem itemValue="#{null}" itemLabel="Seleccione uno" noSelectionOption="true" />
+                                <f:selectItems value="#{afipBean.comprobanteTipoList}" 
+                                               var="cbte" itemValue="#{cbte}" itemLabel="#{cbte.descripcion}"  />
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel for="somPtoVenta"  value="Punto de Venta: "/>
+                                <p:selectOneMenu id="somPtoVenta" value="#{fecaereqBean.fecaereq.ptoVenta}" 
+                                        converter="selectOneMenuConverter"
+                                        required="true"
+                                        requiredMessage="PtoVenta: Seleccione uno">
+                                <f:selectItem itemValue="" itemLabel="Seleccione uno" />
+                                <f:selectItems value="#{afipBean.puntoVentaList}" 
+                                               var="pVenta" itemValue="#{pVenta}" itemLabel="#{pVenta.numero}" />
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel for="somConcepto"  value="Concepto: "/>
+                                <p:selectOneMenu id="somConcepto" value="#{fecaereqBean.fecaereq.concepto}" 
+                                        converter="selectOneMenuConverter" required="true"
+                                        requiredMessage="Concepto: Seleccione uno">
+                                <f:selectItem itemValue="" itemLabel="Seleccione uno" />
+                                <f:selectItems value="#{afipBean.conceptoList}" 
+                                               var="con" itemValue="#{con}" itemLabel="#{con.descripcion}" />
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel for="somDocTipo"  value="Doc Tipo: "/>
+                                <p:selectOneMenu id="somDocTipo" value="#{fecaereqBean.fecaereq.docTipo}" 
+                                        converter="selectOneMenuConverter" required="true"
+                                        requiredMessage="DocTipo: Seleccione uno">
+                                <f:selectItem itemValue="" itemLabel="Seleccione uno" />
+                                <f:selectItems value="#{afipBean.documentoTipoList}" 
+                                               var="docTipo" itemValue="#{docTipo}" itemLabel="#{docTipo.descripcion}" />
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel for="txtDocNro" value="Doc. Nro: " />
+                                <p:inputText  id="txtDocNro"  value="#{fecaereqBean.fecaereq.docNro}"
+                                                  required="true" requiredMessage="Nro. Documento: Elija un nro de Documento." 
+                                                  validatorMessage="Nro. Documento: Elija un nro de Documento.">
+                                    <f:validateLength minimum="2" />
+                                </p:inputText>
+                                 
+                                <p:outputLabel for="FchVtoPago" value="Fecha Vto Pago: " />
+                                <p:calendar id="FchVtoPago" value="#{fecaereqBean.fecaereq.fchVtoPago}" 
+                                            navigator="true" mode="popup" pattern="MM/dd/yyyy HH:mm"
+                                            showOn="button" showButtonPanel="true"/>
+                                
+                               
+                               <p:outputLabel for="somTipoMon"  value="Tipo de Moneda: "/>
+                                <p:selectOneMenu id="somTipoMon" value="#{fecaereqBean.fecaereq.monId}" 
+                                        converter="selectOneMenuConverter" >
+                                <f:selectItem itemValue="" itemLabel="Seleccione uno" />
+                                <f:selectItems value="#{afipBean.tipoMonedaList}" 
+                                               var="TipoMon" itemValue="#{TipoMon}" itemLabel="#{TipoMon.descripcion}" />
+                                </p:selectOneMenu>
+                                
+                                
+                                
+                              <!--  <h:outputText value="Saltar al final: " />
+                                <h:selectBooleanCheckbox value="rolBean.skip}" />
+
+                              -->
+                               
+                            </p:panelGrid>
+                        </p:panel>
+                    </p:tab>
+                    <!--  ============================================================================================================-->
+
+                    <p:tab id="tabComprobantes" title="Cbtes Asociados">
+                        <p:panel header="Comprobantes Asociados" style="width: 1000px;">
+                            <p:messages />
+
+                            <p:dataTable id="tblAgregarComprobante" style="width: 950px;" 
+                                         paginator ="true" paginatorPosition ="top" 
+                                         rows="10" var="c" value="#{comprobanteBean.cbtesNoInformados}" 
+                                         selection="#{fecaereqBean.fecaereq.cbtesasocs}"
+                                         filteredValue="#{comprobanteBean.filtroComprobantes}"
+                                         emptyMessage = "No hay datos de Comprobantes" rowKey="#{c.numero}">
+
+                                <f:facet name="header">Lista de Comprobantes</f:facet>
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                <p:column headerText="CODIGO" filterBy="#{c.numero}" style="width:50px;text-align: center">
+                                    <h:outputText value="#{c.numero}" />
+                                </p:column>
+                                <p:column headerText="NOMBRE" style="width:200px;text-align: center">
+                                    <h:outputText value="#{c.comprador.nomComprador} #{c.comprador.apellido}" />
+                                </p:column>
+                                <p:column headerText="CONCEPTO" style="width:100px;text-align: center">
+                                    <h:outputText value="#{c.concepto.descripcion}" />
+                                </p:column>
+                                <p:column headerText="PTO. VENTA" style="width:30px;text-align: center">
+                                    <h:outputText value="#{c.ptoventa.numero}" />
+                                </p:column>
+                                <p:column headerText="TIPO" style="width:100px;text-align: center">
+                                    <h:outputText value="#{c.ctetipo.descripcion}" />
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </p:panel>
+                    </p:tab>
+                    <!--  ============================================================================================================-->
+                    <!--  ============================================================================================================-->
+
+                    <p:tab id="informar" title="Confirmar">
+                        <p:panel header="kllk">
+
+                            <p:panelGrid columns="2" styleClass="noBorders">
+
+                                <p:outputLabel for="txtCantRegistros" value="Cantidad de Registros:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCantRegistros" value="#{fecaereqBean.fecaereq.cantRegistros}" />
+
+                                <p:outputLabel for="txtCbteTipo" value="CbteTipo: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCbteTipo" value="#{fecaereqBean.fecaereq.cteTipo.descripcion}" />
+
+                                <p:outputLabel for="txtPtoVenta" value="Punto Venta:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtPtoVenta" value="#{fecaereqBean.fecaereq.ptoVenta.numero}" />
+
+                                <p:outputLabel for="txtConcepto" value="Concepto:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtConcepto" value="#{fecaereqBean.fecaereq.concepto.descripcion}" />
+
+                                <p:outputLabel for="txtDocTipo" value="Tipo Documento:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtDocTipo" value="#{fecaereqBean.fecaereq.docTipo.descripcion}" />
+
+                                <p:outputLabel for="DocNro" value="Numero Documento:" style="font-weight: bold;"/>
+                                <p:outputLabel id="DocNro" value="#{fecaereqBean.fecaereq.docNro}" />
+
+                                <p:outputLabel for="txtCteDesde" value="CteDesde:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCteDesde" value="#{fecaereqBean.fecaereq.cteDesde}" />
+
+                                <p:outputLabel for="txtCbteHasta" value="CteHasta:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCbteHasta" value="#{fecaereqBean.fecaereq.cteHasta}" />
+                                
+                                <p:outputLabel for="txtCbteFch" value="CbteFch:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCbteFch" value="#{fecaereqBean.fecaereq.cbteFch}" />
+
+                                <p:outputLabel for="txtImptotal" value="Importe Total:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImptotal" value="#{fecaereqBean.fecaereq.impTotal}" />
+
+                                <p:outputLabel for="txtImpTotal" value="ImpTotal:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpTotal" value="#{fecaereqBean.fecaereq.impTotal}" />
+
+                                <p:outputLabel for="txtTotConcatenado" value="Importe neto No Gravado:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtTotConcatenado" value="#{fecaereqBean.fecaereq.impTotConc}" />
+
+                                <p:outputLabel for="txtImpNeto" value="Importe Neto Gravado:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpNeto" value="#{fecaereqBean.fecaereq.impNeto}" />
+
+                                <p:outputLabel for="txtImpOpEx" value="Importe Excento:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpOpEx" value="#{fecaereqBean.fecaereq.impOpEx}" />
+
+                                <p:outputLabel for="txtImpIVA" value="Importe IVA:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpIVA" value="#{fecaereqBean.fecaereq.impIva}" />
+
+                                <p:outputLabel for="txtImpTrib" value="Importe Tributario:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpTrib" value="#{fecaereqBean.fecaereq.impTrib}" />
+                                
+                                <p:outputLabel for="txtFchServDesde" value="Fecha Servicio Desde:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtFchServDesde" value="#{fecaereqBean.fecaereq.fchServDesde}" />
+                                
+                                <p:outputLabel for="txFchServHasta" value="I:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txFchServHasta" value="#{fecaereqBean.fecaereq.fchServHasta}" />
+                                
+                                <p:outputLabel for="txtFchVtoPago" value="Importe Tributario:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtFchVtoPago" value="#{fecaereqBean.fecaereq.fchVtoPago}" />
+                                
+                                <p:outputLabel for="txtMon" value="Importe Tributario:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtMon" value="#{fecaereqBean.fecaereq.monId}" />
+                                
+                                <p:outputLabel for="txtMonCotizacion" value="Importe Tributario:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtMonCotizacion" value="#{fecaereqBean.fecaereq.monCotizacion}" />
+
+                              
+                            </p:panelGrid>
+                           
+                            <p:fieldset legend="Comprobantes">
+                                <p:outputLabel for="opComprobantes" value="Comprobantes: " />
+                                <p:outputPanel id="opComprobantes">
+                                    <ui:repeat value="#{fecaereqBean.fecaereq.cbtesasocs}" var="cbte">
+                                        <h:outputText value="#{cbte.numero} - #{cbte.ptoventa} - #{cbte.ctetipo.descripcion} - #{cbte.concepto.descripcion} - total" style="display:block"/>
+                                    </ui:repeat>
+                                </p:outputPanel>
+                            </p:fieldset>
+                           
+                           
+
+                            <p:commandButton value="Informar y Guardar" action="#{rolBean.createRol()}" update="" process="@this"/>
+
+                        </p:panel>
+                    </p:tab>
+                    <p:tab id="Respuesta" title="Respuesta">
+                        <p:panel header="Informar">
+                           
+                            <p:fieldset legend="Respuesta">
+                                <p:outputLabel  value="Respuesta del Servidor" />
+                                <p:outputPanel id="opRespuesta" >
+                                    
+                                </p:outputPanel>
+                            </p:fieldset>
+                           
+                           
+
+                            <p:commandButton value="Cerrar"  update="growlRol" process="@this"/>
+
+                        </p:panel>
+                    </p:tab>
+                </p:wizard>
+
+            </h:form>        
+        </p:dialog>   
+
+
+        <!-- ============================================================================ -->                
+        <!-- =====================                     ================================= -->                        
+        <!-- ============================================================================ -->  
+
+      
+</ui:composition>     
+
+</html>

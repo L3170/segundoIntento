@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition>
+            <!-- ============================================================================ -->                
+            <!-- =====================    Nuevo Rol      ==================================== -->                        
+            <!-- ============================================================================ -->                
+           
+            <p:dialog id="dlgNuevoRol" header="Nuevo Rol" widgetVar="_dlgNuevoRol"
+                      resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                <h:form id="frmNuevoRol">
+                    <p:messages id="mensaje" autoUpdate="true"/>
+
+                    <p:wizard flowListener="#{rolBean.onFlowProcess}">
+                        <p:tab id="tabRol" title="Datos Rol">
+                            <p:panel header="Datos Rol">
+                                <p:messages />
+                                <p:panelGrid  id="display"  columns="2" styleClass="noBorders" style="margin: 0 auto;">
+
+                                    <p:outputLabel for="txtNombreRol" value="Nombre " />
+                                    <p:inputText id="txtNombreRol" value="#{rolBean.rol.nomRol}" 
+                                                 required="true" requiredMessage="El nombre no puede estar vacío."
+                                                 validatorMessage="Nombre: Use un mínimo de dos caracteres.">
+                                        <f:validateLength minimum="2"/>
+                                    </p:inputText>
+
+                                    <p:outputLabel for="txtDescripcionRol" value="Descripcion: " />
+                                    <p:inputTextarea id="txtDescripcionRol" counter="descripcion" maxlength="100" 
+                                                     counterTemplate="{0} characters remaining." autoResize="false" 
+                                                     value = "#{rolBean.rol.descripcion}"
+                                                     required="true" requiredMessage="La descripción no puede estar vacía"/>
+                                    <p:column/>
+                                    <h:outputText id="descripcion" />
+
+                                    <h:outputText value="Saltar al final: " />
+                                    <h:selectBooleanCheckbox value="#{rolBean.skip}" />
+
+                                    <p:outputLabel for="txtUserUpdateRol" value="UserUpdate " />
+                                    <p:inputText id="txtUserUpdateRol" value="#{rolBean.rol.userAdmin}" size="10" 
+                                                 required="true" maxlength="2"  requiredMessage="El userUpdate no puede estar vacío."
+                                                 validatorMessage="Ingrese un usuario válido."
+                                                 converterMessage="Se espera un numero entero aquí.">
+
+                                    </p:inputText>
+
+                                </p:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                        <!--  ============================================================================================================-->
+
+                        <p:tab id="tabUsuarios" title="Usuarios">
+                            <p:panel header="Usuarios">
+                                <p:messages />
+
+
+                                <p:dataTable id="tblAgregarUsuarios" style="width: 700px;" 
+                                             paginator ="true" paginatorPosition ="top" 
+                                             rows="10" var="u" value="#{usuarioBean.usuarioList}" 
+                                             selection="#{rolBean.rol.usuarios}"
+                                             emptyMessage = "No hay datos de Usuarios" rowKey="#{u.idUsuario}">
+
+                                    <f:facet name="header">Lista de Usuarios</f:facet>
+                                    <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                    <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                        <h:outputText value="#{u.idUsuario}" />
+                                    </p:column>
+                                    <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                        <h:outputText value="#{u.nomUsuario}" />
+                                    </p:column>
+
+                                </p:dataTable>
+
+
+
+
+                            </p:panel>
+                        </p:tab>
+                        <!--  ============================================================================================================-->
+
+                        <p:tab id="tabPermisos" title="Permisos">
+                            <p:panel header="Permisos">
+                                <p:messages />
+
+                                <p:dataTable id="tblAgregarPermisos" style="width: 700px;" 
+                                             paginator ="true" paginatorPosition ="top" 
+                                             rows="10" var="per" value="#{permisoBean.permisos}" 
+                                             selection="#{rolBean.rol.permisos}"
+                                             emptyMessage = "No hay datos de Permisos" rowKey="#{per.idPermiso}">
+
+                                    <f:facet name="header">Lista de Permisos</f:facet>
+                                    <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                    <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                        <h:outputText value="#{per.idPermiso}" />
+                                    </p:column>
+                                    <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                        <h:outputText value="#{per.nombre}" />
+                                    </p:column>
+
+                                </p:dataTable>
+
+
+
+                            </p:panel>
+                        </p:tab>
+                        <!--  ============================================================================================================-->
+
+                        <p:tab id="confirm" title="Confirmation">
+                            <p:panel header="Confirmation">
+
+                                <p:panelGrid columns="2" styleClass="noBorders">
+
+                                    <p:outputLabel for="txtNombre" value="NOMBRE:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtNombre" value="#{rolBean.rol.nomRol}" />
+
+
+                                    <p:outputLabel for="txtDescripcion" value="DESCRIPCION:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtDescripcion" value="#{rolBean.rol.descripcion}" />
+
+                                </p:panelGrid>
+                                <p:panelGrid columns="2" styleClass="noBorders">    
+                                    <p:fieldset legend="Usuarios">
+                                        <p:outputLabel for="opUsuarios" value="Usuarios: " />
+                                        <p:outputPanel id="opUsuarios">
+                                            <ui:repeat value="#{rolBean.rol.usuarios}" var="user">
+                                                <h:outputText value="#{user.idUsuario} - #{user.nomUsuario} " style="display:block"/>
+                                            </ui:repeat>
+                                        </p:outputPanel>
+
+
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Permisos">
+                                        <p:outputLabel for="opPermisos" value="Permisos: " />
+                                        <p:outputPanel id="opPermisos">
+                                            <ui:repeat value="#{rolBean.rol.permisos}" var="permi">
+                                                <h:outputText value="#{permi.idPermiso} - #{permi.nombre} " style="display:block"/>
+                                            </ui:repeat>
+                                        </p:outputPanel>
+
+
+                                    </p:fieldset>
+                                </p:panelGrid>
+
+
+                                <p:commandButton value="Submit" action="#{rolBean.createRol()}" update="growlRol" process="@this"/>
+
+                            </p:panel>
+                        </p:tab>
+                    </p:wizard>
+
+                </h:form>        
+            </p:dialog>   
+
+
+
+
+        </ui:composition>
+
+    </body>
+</html>

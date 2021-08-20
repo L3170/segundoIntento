@@ -1,0 +1,318 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <body>
+        <ui:composition >
+
+            <!-- ============================================================================ -->                
+            <!-- =====================    Nuevo Pago        ================================= -->                        
+            <!-- ============================================================================ -->  
+
+
+            <p:dialog id="dlgNuevoPago" header="Información Pago" widgetVar="_dlgNuevoPago"
+                      resizable="false" modal="true" showEffect="explode" hideEffect="explode"
+                      styleClass="noBorders">
+                <h:form id="frmNuevoPago">
+                    <p:messages id="NuevoPagoMessage"    autoUpdate="false"/>
+                    <h:panelGrid  id="display" cellpadding="4" columns="2" style="margin: 0 auto;">
+
+                        <p:outputLabel for="txtCodigo" value="Código: " />
+                        <p:inputText id="txtCodigo" value="#{pagoBean.pago.codCupon}" 
+                                     required="true" requiredMessage="El código del Pago no puede estar vacío."
+                                     validatorMessage="Nombre: Use un mínimo de dos caracteres.">
+                            <f:validateLength minimum="2"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="txtMonto"  value="Monto($): " />
+                        <p:inputText id="txtMonto" value="#{pagoBean.pago.monto}" 
+                                     required="true" requiredMessage="Este campo no puede estar vacío"
+                                     validatorMessage="Debe ingresar como mínimo un número" 
+                                     converterMessage="Debe ingresar el monto en $"
+                                     >
+                            <f:convertNumber type="number"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="calFecha" value="Fecha:" />
+                        <p:calendar id="calFecha" value="#{pagoBean.pago.fechaPago}" navigator="true" 
+                                    mode="popup" pattern="MM/dd/yyyy HH:mm" showOn="button" showButtonPanel="true"/>
+
+                        <p:outputLabel for="txtDescripcionPago" value="Detalle: " />
+                        <p:inputTextarea id="txtDescripcionPago" counter="descripcion" maxlength="100" 
+                                         counterTemplate="{0} characters remaining." autoResize="false" 
+                                         value = "#{pagoBean.pago.detalle}"
+                                         required="true" requiredMessage="La descripción no puede estar vacía"/>
+
+                        <p:column/>
+                        <h:outputText id="descripcion" />
+                    </h:panelGrid>     
+                    <p:fieldset legend="Cliente">
+                        <p:outputLabel for="txtCliente" value="Cliente: " />
+                        <p:inputText  id="txtCliente"  value="#{pagoBean.pago.comprador.docNro}" readonly="true"/>
+                        <p:commandButton value="Clientes" oncomplete="PF('_dlgClientes').show();"/>
+                    </p:fieldset> 
+
+                    <p:fieldset legend="Modo Pago">
+                        <p:outputLabel for="txtModoPago" value="Modo de Pago: " />
+                        <p:inputText  id="txtModoPago"  value="#{pagoBean.pago.modopago.nombreModoPago}" readonly="true"/>
+                        <p:commandButton value="Menu" oncomplete="PF('_dlgModoPagos').show();"/>
+                    </p:fieldset>
+
+                    <h:panelGrid  id="botonesNuevo" cellpadding="4" columns="2" style="margin: 0 auto;">    
+                        <p:commandButton value="Guardar" actionListener="#{pagoBean.createPago()}" 
+                                         update="growl, NuevoPagoMessage" 
+                                         icon="ui-icon-disk" validateClient="true"/>
+                        <p:commandButton value="Cancelar" oncomplete="PF('_dlgNuevoPago').hide()" icon="ui-icon-closethick"/>
+                    </h:panelGrid>
+                </h:form>   
+            </p:dialog>
+
+
+
+            <!--  .............................    DIALOGO Seleccionar Clientes       ..................................................-->
+
+            <p:dialog id="dlgClientes" widgetVar="_dlgClientes" modal="true" resizable="false" 
+                      showEffect="explode" hideEffect="explode" styleClass="noBorders">
+                <h:form id="frmNuevoCliente" >
+
+                    <p:dataTable id="tblNuevoCliente" style="width: 700px;" 
+                                 paginator ="true" paginatorPosition ="top" 
+                                 rows="10" var="cl" value="#{compradorBean.compradorList}" 
+                                 emptyMessage = "No hay datos de Compradores">
+                        <f:facet name="header">Lista de Compradores</f:facet>
+                        <p:column headerText="CODIGO" style="width:30px;text-align: center">
+                            <h:outputText value="#{cl.docNro}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:50px;text-align: center">
+                            <h:outputText value="#{cl.nomComprador}" />
+                        </p:column>
+                        <p:column headerText="APELLIDO" style="width:50px;text-align: center">
+                            <h:outputText value="#{cl.apellido}" />
+                        </p:column>
+                        <p:column style="width:50px;text-align: center">        
+                            <p:commandButton oncomplete="PF('_dlgNuevoPago').show();PF('_dlgClientes').hide();"
+                                             icon="ui-icon-check"
+                                             title="Seleccionar Cliente"
+                                             update = "#{p:component('txtCliente')}">
+
+                                <f:setPropertyActionListener target="#{pagoBean.pago.comprador}" 
+                                                             value="#{cl}"/>
+                            </p:commandButton>  
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Cerrar" onclick="PF('_dlgClientes').hide();" 
+                                     icon="ui-icon-closethick"/>
+                </h:form>                         
+            </p:dialog>
+
+
+            <!--  ============================================================================================================-->
+
+            <!--  .............................    DIALOGO Seleccionar ModoPago      ..................................................-->
+
+            <p:dialog id="dlgModoPagos" widgetVar="_dlgModoPagos" modal="true" resizable="false" 
+                      showEffect="explode" hideEffect="explode" styleClass="noBorders">
+                <h:form id="frmNuevoModoPago" >
+
+                    <p:dataTable id="tblNuevoModoPago" style="width: 700px;" 
+                                 paginator ="true" paginatorPosition ="top" 
+                                 rows="10" var="mp" value="#{modopagoBean.modoPagoList}" 
+                                 emptyMessage = "No hay datos de Modos de Pago">
+                        <f:facet name="header">Lista de Modos de Pago</f:facet>
+                        <p:column headerText="NOMBRE" style="width:100px;text-align: center">
+                            <h:outputText value="#{mp.nombreModoPago}" />
+                        </p:column>
+                        <p:column headerText="DESCRIPCIÓN" style="width:300px;text-align: center">
+                            <h:outputText value="#{mp.descripcion}" />
+                        </p:column>
+                        <p:column style="width:100px;text-align: center">        
+                            <p:commandButton oncomplete="PF('_dlgNuevoPago').show();PF('_dlgModoPagos').hide();"
+                                             icon="ui-icon-check"
+                                             title="Seleccionar Modo Pago"
+                                             update = "#{p:component('txtModoPago')}">
+
+                                <f:setPropertyActionListener target="#{pagoBean.pago.modopago}" 
+                                                             value="#{mp}"/>
+                            </p:commandButton>  
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Cerrar" onclick="PF('_dlgClientes').hide();" 
+                                     icon="ui-icon-closethick"/>
+                </h:form>                         
+            </p:dialog>
+
+
+
+
+            <!-- ============================================================================ -->                
+            <!-- ====================    Editar Pago        ================================= -->                        
+            <!-- ============================================================================ -->  
+
+            <p:dialog id="dlgEditarPago" header="Información Pago" widgetVar="_dlgEditarPago"
+                      resizable="false" modal="true" showEffect="explode" hideEffect="explode"
+                      styleClass="noBorders">
+                <h:form id="frmEditarPago">
+                    <p:messages id="EditarPagoMessage"    autoUpdate="false"/>
+                    <h:panelGrid  id="editarDisplay" cellpadding="4" columns="2" style="margin: 0 auto;">
+
+                        <p:outputLabel for="txtEditarCodigo" value="Código: " />
+                        <p:inputText id="txtEditarCodigo" value="#{pagoBean.pago.codCupon}" 
+                                     required="true" requiredMessage="El código del Pago no puede estar vacío."
+                                     validatorMessage="Nombre: Use un mínimo de dos caracteres.">
+                            <f:validateLength minimum="2"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="txtEditarMonto"  value="Monto($): " />
+                        <p:inputText id="txtEditarMonto" value="#{pagoBean.pago.monto}" 
+                                     required="true" requiredMessage="Este campo no puede estar vacío"
+                                     validatorMessage="Debe ingresar como mínimo un número" 
+                                     converterMessage="Debe ingresar el monto en $"
+                                     >
+                            <f:convertNumber type="currency" currencySymbol="$"/>
+                        </p:inputText>
+
+                        <h:outputLabel for="calEditarFecha" value="Fecha:" />
+                        <p:calendar id="calEditarFecha" value="#{pagoBean.pago.fechaPago}" navigator="true" 
+                                    mode="popup" pattern="MM/dd/yyyy HH:mm" showOn="button" showButtonPanel="true"/>
+                       
+                        <p:outputLabel for="txtEditarDescripcionPago" value="Detalle: " />
+                        <p:inputTextarea id="txtEditarDescripcionPago" counter="descripcion" maxlength="100" 
+                                         counterTemplate="{0} characters remaining." autoResize="false" 
+                                         value = "#{pagoBean.pago.detalle}"
+                                         required="true" requiredMessage="La descripción no puede estar vacía"/>
+
+                        <p:column/>
+                        <h:outputText id="descripcion" />
+                    </h:panelGrid>     
+                    <p:fieldset legend="Cliente">
+                        <p:outputLabel for="txtEditarCliente" value="Cliente: " />
+                        <p:inputText  id="txtEditarCliente"  value="#{pagoBean.pago.comprador.docNro}" readonly="true"/>
+                        <p:commandButton value="Clientes" oncomplete="PF('_dlgEditarClientes').show();"/>
+                    </p:fieldset> 
+
+                    <p:fieldset legend="Modo Pago">
+                        <p:outputLabel for="txtEditarModoPago" value="Modo de Pago: " />
+                        <p:inputText  id="txtEditarModoPago"  value="#{pagoBean.pago.modopago.nombreModoPago}" readonly="true"/>
+                        <p:commandButton value="Menu" oncomplete="PF('_dlgEditarModoPagos').show();"/>
+                    </p:fieldset>
+
+
+                    <h:panelGrid  id="botonesNuevo" cellpadding="4" columns="2" style="margin: 0 auto;">    
+                        <p:commandButton value="Guardar" actionListener="#{pagoBean.updatePago()}" 
+                                         update="growl, EditarPagoMessage" 
+                                         icon="ui-icon-disk" validateClient="true"/>
+                        <p:commandButton value="Cancelar" oncomplete="PF('_dlgEdiarPago').hide()" icon="ui-icon-closethick"/>
+                    </h:panelGrid>
+                </h:form>   
+            </p:dialog>
+
+
+
+            <!--  .............................    DIALOGO Seleccionar Clientes       ..................................................-->
+
+            <p:dialog id="dlgEditarClientes" widgetVar="_dlgEditarClientes" modal="true" resizable="false" 
+                      showEffect="explode" hideEffect="explode" styleClass="noBorders">
+                <h:form id="frmEditarCliente" >
+
+                    <p:dataTable id="tblEditarCliente" style="width: 700px;" 
+                                 paginator ="true" paginatorPosition ="top" 
+                                 rows="10" var="cl" value="#{compradorBean.compradorList}" 
+                                 emptyMessage = "No hay datos de Comporadores">
+                        <f:facet name="header">Lista de Clientes</f:facet>
+                        <p:column headerText="CODIGO" style="width:30px;text-align: center">
+                            <h:outputText value="#{cl.docNro}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:50px;text-align: center">
+                            <h:outputText value="#{cl.nomComprador}" />
+                        </p:column>
+                        <p:column headerText="APELLIDO" style="width:50px;text-align: center">
+                            <h:outputText value="#{cl.apellido}" />
+                        </p:column>
+                        <p:column style="width:50px;text-align: center">        
+                            <p:commandButton oncomplete="PF('_dlgEditarPago').show();PF('_dlgEditarClientes').hide();"
+                                             icon="ui-icon-check"
+                                             title="Seleccionar Cliente"
+                                             update = "#{p:component('txtEditarCliente')}">
+
+                                <f:setPropertyActionListener target="#{pagoBean.pago.comprador}" 
+                                                             value="#{cl}"/>
+                            </p:commandButton>  
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Cerrar" onclick="PF('_dlgEditarClientes').hide();" 
+                                     icon="ui-icon-closethick"/>
+                </h:form>                         
+            </p:dialog>
+
+
+            <!--  ============================================================================================================-->
+
+            <!--  .............................    DIALOGO Seleccionar ModoPago      ..................................................-->
+
+            <p:dialog id="dlgEditarModoPagos" widgetVar="_dlgEditarModoPagos" modal="true" resizable="false" 
+                      showEffect="explode" hideEffect="explode" styleClass="noBorders">
+                <h:form id="frmEdidtarModoPago" >
+
+                    <p:dataTable id="tblEditarModoPago" style="width: 700px;" 
+                                 paginator ="true" paginatorPosition ="top" 
+                                 rows="10" var="mp" value="#{modopagoBean.modoPagoList}" 
+                                 emptyMessage = "No hay datos de Modos de Pago">
+                        <f:facet name="header">Lista de Modos de Pago</f:facet>
+                        <p:column headerText="NOMBRE" style="width:100px;text-align: center">
+                            <h:outputText value="#{mp.nombreModoPago}" />
+                        </p:column>
+                        <p:column headerText="DESCRIPCIÓN" style="width:300px;text-align: center">
+                            <h:outputText value="#{mp.descripcion}" />
+                        </p:column>
+                        <p:column style="width:100px;text-align: center">        
+                            <p:commandButton oncomplete="PF('_dlgEditarPago').show();PF('_dlgEditarModoPagos').hide();"
+                                             icon="ui-icon-check"
+                                             title="Seleccionar Modo Pago"
+                                             update = "#{p:component('txtEditarModoPago')}">
+
+                                <f:setPropertyActionListener target="#{pagoBean.pago.modopago}" 
+                                                             value="#{mp}"/>
+                            </p:commandButton>  
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Cerrar" onclick="PF('_dlgEditarClientes').hide();" 
+                                     icon="ui-icon-closethick"/>
+                </h:form>                         
+            </p:dialog>
+
+
+
+            <!-- ============================================================================ -->                
+            <!-- ===================    Eliminar Pago    ==================================== -->                        
+            <!-- ============================================================================ -->                 
+
+
+
+            <p:dialog id="dlgEliminarPago" header="Eliminar Pago" widgetVar="_dlgEliminarPago"
+                      resizable="false" modal="true" showEffect="explode" hideEffect="explode"
+                      styleClass="noBorders">
+                <h:form id="frmEliminarPago">
+                    <h:outputText value="Esta por eliminar un de pago ¿Cotinuar? "/>
+                    <p:panelGrid  columns="2" style="margin: 0 auto;">
+                        <p:commandButton value="Aceptar" actionListener="#{pagoBean.deletePago()}" 
+                                         update="frmMostrarPago, growl" 
+                                         oncomplete="PF('_dlgEliminarPago').hide();" icon="ui-icon-trash"/>
+                        <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                         onclick="PF('_dlgEliminarPago').hide();"/>
+                    </p:panelGrid>
+                </h:form>   
+            </p:dialog>
+
+
+            <!--  ============================================================================================================-->
+
+
+
+        </ui:composition>
+
+    </body>
+</html>

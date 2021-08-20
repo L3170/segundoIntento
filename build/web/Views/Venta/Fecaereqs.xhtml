@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+            
+        <ui:define name="content">
+            <p:growl id="growlFecaereqs" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+            <h1>Información de los CAE de Facturación Electronica</h1>
+        <h:form id="frmBtnNuevoFecaereq">
+                <p:commandButton value="Nuevo FeCAEReq" 
+                                  
+                                 actionListener="#{fecaereqBean.prepararNuevoFecaereq()}" 
+                                 oncomplete="PF('_dlgNuevoFecaereq').show();" 
+                                 update="frmNuevoFecaereq"
+                                 icon="ui-icon-plusthick" title="Nuevo Fecaereq">
+                    <p:resetInput  target="dlgNuevoFecereq" /> 
+                    <f:setPropertyActionListener target="#{fecaereqBean.actualizarTabla}"
+                                                     value="frmMostrarFecaereqs" />
+                </p:commandButton>
+        </h:form>   
+        <h:form id="frmMostrarFecaereqs">
+            <p:growl id="msgs" showDetail="true" />
+
+            <p:dataTable id="tblFecaereqs" paginator ="true" paginatorPosition ="top" 
+                         widgetVar="_tblFecaereqs" filteredValue="#{fecaereqBean.filteredFecaereq}"
+                         var="f" value="#{fecaereqBean.fecaereqList}" emptyMessage = "No se encontraron datos de FECAEReq">
+                <f:facet name="header">
+                    Lista de CAE informados
+                </f:facet>
+                <p:column headerText="ID" filterBy="#{f.idFeCaereq}" filterMatchMode="contains">
+                    <h:outputText value="#{f.idFeCaereq}" />
+                </p:column>
+                <p:column headerText="N°REGISTROS" >
+                    <h:outputText value="#{f.cantRegistros}" />
+                </p:column>
+                <p:column headerText="CbteTipo" filterBy="#{f.cteTipo}" filterMatchMode="contains">
+                    <h:outputText value="#{f.cteTipo}" />
+                </p:column>
+                <p:column headerText="PtoVenta" filterBy="#{f.ptoVenta}" filterMatchMode="contains">
+                    <h:outputText value="#{f.ptoVenta}" />
+                </p:column>
+                <p:column headerText="DocNro" filterBy="#{f.docNro}" filterMatchMode="contains">
+                    <h:outputText value="#{f.docNro}" />
+                </p:column>
+                <p:column headerText="VER" style="width:20px;text-align: center">
+                             <p:commandButton value="ver" icon="ui-icon-newwin" title="Ver FECAEREQ" 
+                                              action="Fecaereq.xhtml" >
+                                 <f:setPropertyActionListener target="#{fecaereqBean.fecaereq}" 
+                                                                           value="#{f}"/>
+                             </p:commandButton>
+                </p:column>
+                
+               <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                <p:commandButton oncomplete="PF('_dlgEditarFecaereq').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Fecaereq"
+                                                 update = "frmEditarFecaereqs">
+                                    <f:setPropertyActionListener target="#{fecaereqBean.fecaereq}" 
+                                                                 value="#{f}"/>
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('_dlgEliminarFecaereq').show();"
+                                                 update="frmMostrarFecaereqs"
+                                                 icon="ui-icon-trash" title="Eliminar Fecaereq">
+                                    <f:setPropertyActionListener value="#{f}" target="#{fecaereqBean.fecaereq}" />
+                                </p:commandButton>
+                            </p:panelGrid>    
+                </p:column>
+                        
+                
+            </p:dataTable>
+        </h:form>   
+            
+<!--  ============================================================================================================-->
+   
+ <!--  ============================================================================================================-->
+       <!-- <ui:insert name="dialogs" >  -->
+           <ui:include src="dialogFecaereq.xhtml"/> 
+         <!--    </ui:insert> -->
+ <!--  ============================================================================================================-->
+      
+         </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

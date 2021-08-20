@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+            
+        <ui:define name="content">
+            <p:growl id="growlLocalidad" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+            <h1 align="center">Información de las Localidades</h1>
+        <h:form>
+                    <p:commandButton value="Nueva Localidad" 
+                                     actionListener="#{provinciaLocalidadBean.prepararNuevaLocalidad()}" 
+                                     oncomplete="PF('_dlgNuevaLocalidad').show();" 
+                                     icon="ui-icon-plusthick" title="Nueva Localidad">
+                    <p:resetInput  target="dlgNuevaLocalidad" />
+                        <!--  resetInput hace que los campos del dialog aparezcan en blanco... si bien se puede hace con el boton type= reset    -->
+                        <!-- En este caso si el formulario tiene un error de validación y se hace clic en el boton reset... no se vuelven a cero los valores del formulario -->              
+                        <f:setPropertyActionListener target="#{provinciaLocalidadBean.actualizarTabla}"
+                                                     value="formMostrarLocalidad" />    
+                    </p:commandButton>    
+                        
+        </h:form>    
+
+                <h:form id="formMostrarLocalidad">
+
+                    <p:dataTable id="tablaLocalidad" paginator ="true" paginatorPosition ="top" 
+                                 rows="30" var="l" value="#{provinciaLocalidadBean.localidadList}" 
+                                 emptyMessage = "No hay datos de Localidades">
+                        <f:facet name="header">Lista de Localidades</f:facet>
+
+                        <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                            <h:outputText value="#{l.idLocalidad}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                            <h:outputText value="#{l.nomLocalidad}" />
+                        </p:column>
+                        <p:column headerText="ACTUALIZADO" style="width:100px;text-align: left">
+                            <h:outputText value="#{l.lastUpdate}" />
+                        </p:column>
+                        <p:column headerText="USUARIO QUE ACTUALIZO" style="width:100px;text-align: center">
+                            <h:outputText value="#{l.userUpdate}" />
+                        </p:column>
+                        <p:column headerText="PROVINCIA" style="width:100px;text-align: center">
+                            <h:outputText value="#{l.provincia.nomProvincia}" />
+                        </p:column>
+                        <p:column headerText="ABRIR" style="width:100px;text-align: center">
+                            <h:outputText value="Lista de clientes" />
+                        </p:column>
+
+                        <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                <p:commandButton oncomplete="PF('_dlgEditarLocalidad').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Localidad"
+                                                 update = ":formEditarLocalidad">
+                                    <f:setPropertyActionListener target="#{provinciaLocalidadBean.localidad}" 
+                                                                 value="#{l}"/>
+
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('_dlgEliminarLocalidad').show();"
+                                                 update="dlgEliminarLocalidad"
+                                                 icon="ui-icon-trash" title="Eliminar Localidad">
+                                    <f:setPropertyActionListener value="#{l}" target="#{provinciaLocalidadBean.localidad}" />
+
+                                </p:commandButton>
+                            </p:panelGrid>    
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>    
+            
+<!--  ============================================================================================================-->
+ <!--  ============================================================================================================-->
+ 
+        <!-- <ui:insert name="dialogs" >  -->
+            <ui:include src="dialogLocalidad.xhtml"/>
+             
+         <!--    </ui:insert> -->
+ <!--  ============================================================================================================-->
+        
+         </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

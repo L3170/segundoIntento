@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+            
+        <ui:define name="content">
+            <p:growl id="growlComprador" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+            <h1>Información de los Compradores</h1>
+        <h:form>
+                <p:commandButton value="Nuevo Comprador" 
+                                 actionListener="#{compradorBean.prepararNuevoComprador()}" 
+                                 oncomplete="PF('_dlgNuevoComprador').show();" 
+                                 update="formNuevoComprador"
+                                 icon="ui-icon-plusthick" title="Nuevo Comprador">
+                    <p:resetInput  target="dlgNuevoComprador" />
+                    <f:setPropertyActionListener target="#{compradorBean.actualizarTabla}"
+                                                     value="formMostrarCompradores" />
+                </p:commandButton>
+        </h:form>   
+        <h:form id="formMostrarCompradores">
+            <p:growl id="msgs" showDetail="true" />
+
+            <p:dataTable id="tablaCompradores" paginator ="true" paginatorPosition ="top" 
+                         widgetVar="_tablaCompradores" filteredValue="#{compradorBean.filteredCompradores}"
+                         var="c" value="#{compradorBean.compradorList}" emptyMessage = "No se encontraron datos de Compradores">
+                <f:facet name="header">
+                    Lista de Compradores
+                </f:facet>
+                <p:column headerText="TIPO" filterBy="#{c.doctipo.descripcion}" filterMatchMode="contains">
+                    <h:outputText value="#{c.doctipo.descripcion}" />
+                </p:column>
+                <p:column headerText="NRO" filterBy="#{c.docNro}" filterMatchMode="contains">
+                    <h:outputText value="#{c.docNro}" />
+                </p:column>
+                <p:column headerText="NOMBRES" filterBy="#{c.nomComprador}" filterMatchMode="contains">
+                    <h:outputText value="#{c.nomComprador}" />
+                </p:column>
+                <p:column headerText="APELLIDOS" filterBy="#{c.apellido}" filterMatchMode="contains">
+                    <h:outputText value="#{c.apellido}" />
+                </p:column>
+                <p:column headerText="DIRECION">
+                    <h:outputText value="#{c.direccion}" />
+                </p:column>
+                <p:column headerText="NACIMIENTO">
+                    <h:outputText value="#{c.fchNacimiento}" />
+                </p:column>
+                <p:column headerText="TELEFONO">
+                    <h:outputText value="#{c.telefono}" />
+                </p:column>
+                <p:column headerText="CELULAR">
+                    <h:outputText value="#{c.celular}" />
+                </p:column>
+                <p:column headerText="EMAIL">
+                    <h:outputText value="#{c.email}" />
+                </p:column>
+                <p:column headerText="LOCALIDAD" filterBy="#{c.localidad.nomLocalidad}" filterMatchMode="contains">
+                    <h:outputText value="#{c.localidad.nomLocalidad}" />
+                </p:column>
+                
+               <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                <p:commandButton oncomplete="PF('_dlgEditarComprador').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Comprador"
+                                                 update = "frmEditarComprador">
+                                    <f:setPropertyActionListener target="#{compradorBean.comprador}" 
+                                                                 value="#{c}"/>
+                                    
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('_dlgEliminarComprador').show();"
+                                                 update="formMostrarCompradores"
+                                                 icon="ui-icon-trash" title="Eliminar Comprador">
+                                    <f:setPropertyActionListener value="#{c}" target="#{compradorBean.comprador}" />
+                                                                 
+                                </p:commandButton>
+                            </p:panelGrid>    
+                </p:column>
+                        
+                
+            </p:dataTable>
+        </h:form>   
+            
+<!--  ============================================================================================================-->
+       
+ 
+ 
+ 
+ <!--  ============================================================================================================-->
+ 
+        <!-- <ui:insert name="dialogs" >  -->
+            <ui:include src="dialogComprador.xhtml"/>
+             
+             
+         <!--    </ui:insert> -->
+ <!--  ============================================================================================================-->
+         
+            
+            
+            
+            
+            
+            
+         </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

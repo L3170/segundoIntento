@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+            xmlns:p="http://primefaces.org/ui"
+            xmlns:h="http://xmlns.jcp.org/jsf/html"
+            xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h1>Datos de ModoPago</h1>
+                <h:form>
+                    <p:commandButton value="Nuevo Modo de Pago" 
+                                     actionListener="#{modopagoBean.prepararNuevoModoPago()}" 
+                                     oncomplete="PF('dialogNuevoModopago').show();" 
+                                     icon="ui-icon-plusthick" title="Nuevo Modo de Pago"/>
+                </h:form>    
+
+                <h:form id="formMostrarModopago">
+
+                    <p:dataTable id="tablaModopago" paginator ="true" paginatorPosition ="top" 
+                                 rows="30" var="mp" value="#{modopagoBean.modoPagoList}" 
+                                 emptyMessage = "No hay datos de Modos de Pago">
+                        <f:facet name="header">Lista de Modos de Pago</f:facet>
+                        
+                        <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                            <h:outputText value="#{mp.idModoPago}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                            <h:outputText value="#{mp.nombreModoPago}" />
+                        </p:column>
+                        <p:column headerText="PORCENTAJE" style="width:100px;text-align: left">
+                            <h:outputText value="#{mp.porcentaje}" />
+                        </p:column>
+                        <p:column headerText="DESCRIPCION" style="width:100px;text-align: center">
+                            <h:outputText value="#{mp.descripcion}" />
+                        </p:column>
+                        
+                        <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                <p:commandButton oncomplete="PF('dialogEditarModopago').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Modo Pago"
+                                                 update = ":formEditarModopago">
+                                    <f:setPropertyActionListener target="#{modopagoBean.modoPago}" 
+                                                                 value="#{mp}"/>
+                                    
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('dialogEliminarModopago').show();"
+                                                 update="formMostrarModopago"
+                                                 icon="ui-icon-trash" title="Eliminar Modo Pago">
+                                    <f:setPropertyActionListener value="#{mp}" target="#{modopagoBean.modoPago}" />
+                                                                 
+                                </p:commandButton>
+                            </p:panelGrid>    
+                        </p:column>
+                        
+                    </p:dataTable>
+                </h:form>   
+<!--  ============================================================================================================-->
+                   
+                <h:form id="formNuevoModopago">
+                    <p:dialog id="dlgNuevoModopago" header="Información Modo de Pago" widgetVar="dialogNuevoModopago"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                        
+                        <h:panelGrid  id="display" cellpadding="4" columns="2" style="margin: 0 auto;">
+                            
+                            <h:outputText value="Nombre:" />
+                            <p:inputText value="#{modopagoBean.modoPago.nombreModoPago}" />
+                            
+                            <h:outputText value="Porcentaje: " />
+                            <p:inputText value="#{modopagoBean.modoPago.porcentaje}" />
+
+                            <h:outputText id="descripcion" /> 
+                            
+                            <p:inputTextarea counter="descripcion" maxlength="100" 
+                                        counterTemplate="Descripcion: {0} caracteres." autoResize="false" 
+                                        value = "#{modopagoBean.modoPago.descripcion}"/>
+                                
+                                    
+                                <p:commandButton value="Guardar" actionListener="#{modopagoBean.createModoPago()}" 
+                                             update=":formMostrarModopago:tablaModopago" 
+                                             oncomplete="PF('dialogNuevoModopago').hide()" icon="ui-icon-disk"/>
+                            <p:commandButton value="Cancelar" oncomplete="PF('dialogNuevoModopago').hide()" icon="ui-icon-closethick"/>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+ <!--  ============================================================================================================-->
+                   
+
+                <h:form id="formEditarModopago">
+                    <p:dialog id="dlgEditarModoPago" header="Información Modo de Pago" widgetVar="dialogEditarModopago"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                         
+                        <p:panelGrid  columns="2" style="margin: 0 auto;">
+                            
+                            <h:outputText value="Nombre: "/>
+                            <p:inputText value="#{modopagoBean.modoPago.nombreModoPago}"/>
+                           
+                            <h:outputText value="Porcentaje: "/>
+                            <p:inputText value="#{modopagoBean.modoPago.porcentaje}"/>
+                           
+                             <h:outputText id="descripcion" /> 
+                            
+                            <p:inputTextarea counter="descripcion" maxlength="100" 
+                                        counterTemplate="Descripcion: {0} caracteres." autoResize="false" 
+                                        value = "#{modopagoBean.modoPago.descripcion}"/>
+                           
+                            
+                                <p:commandButton value="Guardar" actionListener="#{modopagoBean.updateModopago()}" 
+                                             update=":formMostrarModopago:tablaModopago" 
+                                             oncomplete="PF('dialogEditarModopago').hide()" icon="ui-icon-disk"/>
+                            <p:commandButton value="Cancelar" onclick="PF('dialogEditarModopago').hide();" 
+                                             icon="ui-icon-closethick"/>
+                        </p:panelGrid>
+                    </p:dialog>
+
+ <!--  ============================================================================================================-->
+                </h:form>   
+                <h:form id="formEliminarModopago">
+
+                    <p:dialog id="dlgEliminarModopago" header="Eliminar Modo Pago" widgetVar="dialogEliminarModopago"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                        <h:outputText value="Esta por eliminar un modo de pago ¿Cotinuar? "/>
+                            <p:panelGrid  columns="2" style="margin: 0 auto;">
+                                <p:commandButton value="Aceptar" actionListener="#{modopagoBean.deleteModoPago()}" 
+                                             update=":formMostrarModopago:tablaModopago" 
+                                             oncomplete="PF('dialogEliminarModopago').hide();" icon="ui-icon-trash"/>
+                                <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                             onclick="PF('dialogEliminarModopago').hide();"/>
+                            </p:panelGrid>
+                    </p:dialog>
+                </h:form>   
+ <!--  ============================================================================================================-->
+
+
+
+
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+            
+        <ui:define name="content">
+            <p:growl id="growlProvincias" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+            <h1>Información de las Provincias</h1>
+        <h:form>
+                <p:commandButton value="Nueva Provincia" 
+                                 actionListener="#{provinciaLocalidadBean.prepararNuevaProvincia()}" 
+                                 oncomplete="PF('_dlgNuevaProvincia').show();" 
+                                 update="frmNuevaProvincia"
+                                 icon="ui-icon-plusthick" title="Nueva Provincia">
+                    <p:resetInput  target="dlgNuevaProvincia" />
+                    <f:setPropertyActionListener target="#{provinciaLocalidadBean.actualizarTabla}"
+                                                     value="formMostrarProvincia" />
+                </p:commandButton>
+        </h:form>   
+        <h:form id="frmMostrarProvincia">
+            <p:growl id="msgs" showDetail="true" />
+
+            <p:dataTable id="tblProvincias" paginator ="true" paginatorPosition ="top" 
+                         widgetVar="_tablaProvincias" filteredValue="#{provinciaLocalidadBean.filtroProvincias}"
+                         var="p" value="#{provinciaLocalidadBean.provinciaList}" emptyMessage = "No se encontraron datos de Provincias">
+                <f:facet name="header">
+                    Lista de Provincias
+                </f:facet>
+                <p:column headerText="ID" style="width:40px;text-align: center" filterBy="#{p.idProvincia}" filterMatchMode="contains">
+                    <h:outputText value="#{p.idProvincia}" />
+                </p:column>
+                <p:column headerText="NOMBRE" filterBy="#{p.nomProvincia}" filterMatchMode="contains">
+                    <h:outputText value="#{p.nomProvincia}" />
+                </p:column>    
+                <p:column headerText="VER" style="width:80px;text-align: center">
+                    <p:commandButton value="ver" icon="ui-icon-newwin" 
+                                     title="Ver Localidades" 
+                                     action="Provincia.xhtml" >
+                        <f:setPropertyActionListener target="#{provinciaLocalidadBean.provincia}" 
+                                                     value="#{p}"/>
+                    </p:commandButton>
+                </p:column>    
+                    
+                <p:column headerText="ACTUALIZADO" style="width:100px;text-align: left">
+                    <h:outputText value="#{p.lastUpdate}" />
+                </p:column>
+                <p:column headerText="USUARIO QUE ACTUALIZO" style="width:100px;text-align: center">
+                    <h:outputText value="#{p.userUpdate}" />
+                </p:column>    
+              
+               <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                <p:commandButton oncomplete="PF('_dlgEditarProvincia').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Provincia"
+                                                 update = "frmEditarProvincia">
+                                    <f:setPropertyActionListener target="#{provinciaLocalidadBean.provincia}" 
+                                                                 value="#{p}"/>
+                                    
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('_dlgEliminarProvincia').show();"
+                                                 update="frmMostrarProvincia"
+                                                 icon="ui-icon-trash" title="Eliminar Provincia">
+                                    <f:setPropertyActionListener target="#{provinciaLocalidadBean.provincia}"
+                                                                 value="#{p}"/>
+                                                                 
+                                </p:commandButton>
+                            </p:panelGrid>    
+                </p:column>
+                        
+                
+            </p:dataTable>
+        </h:form>   
+            
+<!--  ============================================================================================================-->
+ <!--  ============================================================================================================-->
+ 
+        <!-- <ui:insert name="dialogs" >  -->
+            <ui:include src="dialogProvincia.xhtml"/>
+             
+         <!--    </ui:insert> -->
+ <!--  ============================================================================================================-->
+        
+         </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

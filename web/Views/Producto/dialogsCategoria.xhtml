@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+       xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <body>
+        <ui:composition >
+
+                <!-- ============================================================================ -->                
+                <!-- =====================    Nueva Categoria   ================================= -->                        
+                <!-- ============================================================================ -->  
+                
+                <p:dialog id="dlgNuevaCategoria" header="Nueva Categoria" widgetVar="_dlgNuevaCategoria"
+                          resizable="false" modal="true" showEffect="explode" hideEffect="explode"
+                          positionType="fixed" width="65%" height="500px">
+                    <p:messages id="mesaje" autoUpdate="true"/>
+                    <h:form id="frmNuevaCategoria">
+                        
+                        <p:wizard id="wiz" style="width:800px;height: auto;" widgetVar="wiz" flowListener="#{categoriaBean.onFlowProcess}">
+                            <p:tab id="categoria" title="Categoria">
+                                <p:panel header="Nombre de la Categoria">
+                                    <p:panelGrid columns="2" styleClass="noBorders" style="margin: 0 auto;">
+                                        <p:outputLabel for="txtNomCategoria" value="Nombre: "/>
+                                        <p:inputText id="txtNomCategoria" value="#{categoriaBean.categoria.nomCategoria}"
+                                                     required="true" requiredMessage="Nombre: Ingrese un Nombre para la Categoria."
+                                                     validatorMessage ="Nombre: debe ser mas de dos letras.">
+                                            <f:validateLength minimum="2" />
+                                        </p:inputText>
+                                        <p:outputLabel for="txtDescripcionCategoria" value="Descripcion: " />
+                                        <p:inputTextarea id="txtDescripcionCategoria" counter="descripcion" maxlength="100" 
+                                                         counterTemplate="{0} characters remaining." autoResize="false" 
+                                                         value = "#{categoriaBean.categoria.descripcion}"
+                                                         required="true" requiredMessage="La descripción no puede estar vacía"/>
+                                        <p:column/>
+                                        <h:outputText id="descripcion" />
+                                        <h:outputText value="Saltar al final: " />
+                                        <h:selectBooleanCheckbox value="#{categoriaBean.skip}" />
+
+                                    </p:panelGrid>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab id="productos" title="Productos">
+                                <p:panel header="Productos de la Categoria">
+                                    <p:dataTable id="tblAgregarProductos" style="width: 700px;" 
+                                                     paginator ="true" paginatorPosition ="top"  rows="10" 
+                                                     var="p" value="#{productoBean.productoList}" 
+                                                     filteredValue="#{productoBean.filteredProducto}"
+                                                     selection="#{categoriaBean.categoria.productos}"
+                                                     emptyMessage = "No hay datos de Productos" rowKey="#{p.idProducto}">
+
+                                            <f:facet name="header">Lista de Producto</f:facet>
+                                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                            <p:column headerText="ID" style="width:40px;text-align: center" filterBy="#{p.idProducto}" filterMatchMode="contains">
+                                                <h:outputText value="#{p.idProducto}" />
+                                            </p:column>
+                                            <p:column headerText="NOMBRE" style="width:300px;text-align: center" filterBy="#{p.nomProducto}" filterMatchMode="contains">
+                                                <h:outputText value="#{p.nomProducto}" />
+                                            </p:column>
+                                            <p:column headerText="MARCA" style="width:300px;text-align: center" filterBy="#{p.marca}" filterMatchMode="contains">
+                                                <h:outputText value="#{p.marca}" />
+                                            </p:column>
+
+                                    </p:dataTable>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab  id="confirm" title="Confirmación">
+
+                                <h:panelGrid  id="display" cellpadding="4" columns="2" style="margin: 0 auto;">
+
+                                    <h:outputText value="Nombre:" style="font-weight: bold;"/>
+                                    <h:outputText value="#{categoriaBean.categoria.nomCategoria}" />
+
+                                    <h:outputText value="Descripcion: " style="font-weight: bold;"/>
+                                    <h:outputText value="#{categoriaBean.categoria.descripcion}" />
+                                </h:panelGrid>    
+                                <p:fieldset legend="Productos">
+
+                                    <ui:repeat var="pro" value="#{categoriaBean.categoria.productos}" >
+                                        <p:panelGrid  id="categoriaPr"  columns="6" styleClass="noBorders" >
+
+                                            <p:outputLabel  value="ID: " style="font-weight: bold;"/>
+                                            <p:outputLabel  value="#{pro.idProducto}" />
+                                            <p:outputLabel  value="Nombre: " style="font-weight: bold;"/>
+                                            <p:outputLabel  value="#{pro.nomProducto}" />
+                                            <p:outputLabel  value="Marca: " style="font-weight: bold;"/>
+                                            <p:outputLabel value="#{pro.marca}" />
+                                        </p:panelGrid>
+                                    </ui:repeat>
+                                </p:fieldset>
+                                <p:column/>
+                                <h:panelGrid  cellpadding="4" columns="2" style="margin: 0 auto; float: right;">
+                                    <p:commandButton value="Guardar" actionListener="#{categoriaBean.createCategoria()}"
+                                                     oncomplete="PF('wiz').loadStep('categoria', false)"
+                                                     update="growlCategoria"
+                                                     icon="ui-icon-disk">
+                                    
+                                    </p:commandButton>
+                                    <p:commandButton value="Cancelar"  oncomplete="PF('_dlgNuevaCategoria').hide();" icon="ui-icon-closethick"/>
+                                </h:panelGrid>
+
+
+                            </p:tab>
+                        </p:wizard>
+                        
+                        
+                    </h:form>
+                    
+                </p:dialog>
+                
+                
+                
+                
+               
+                
+ <!-- ============================================================================ -->                
+ <!-- ====================    Editar Categoria   ================================= -->                        
+ <!-- ============================================================================ -->  
+            
+            <p:dialog id="dlgEditarCategoria" header="Editar Categoria" widgetVar="_dlgEditarCategoria"
+                          resizable="false" modal="true" styleClass="noBorders" showEffect="explode" hideEffect="explode"
+                          positionType="fixed" width="65%" height="500px">
+                    <p:messages id="mensajeEditar" autoUpdate="true"/>
+                    <h:form id="frmEditarCategoria">
+                        <!--EL ID Y EL WIDGETVAR DEBEN SER IGUALES PARA PODER VOLVER AL PRIMER PASO DEL WIZARD DESPUES DE GUARDAR -->
+                        <p:wizard id="wizEditar" style="width:800px;height: auto;" widgetVar="wizEditar" flowListener="#{categoriaBean.onFlowProcess}">
+                            <p:tab id="categoria" title="Categoria">
+                                <p:panel header="Nombre de la Categoria">
+                                    <p:panelGrid columns="2" styleClass="noBorders" style="margin: 0 auto;">
+                                        <p:outputLabel for="txtNomCategoriaEditar" value="Nombre: "/>
+                                        <p:inputText id="txtNomCategoriaEditar" value="#{categoriaBean.categoria.nomCategoria}"
+                                                     required="true" requiredMessage="Nombre: Ingrese un Nombre para la Categoria."
+                                                     validatorMessage ="Nombre: debe ser mas de dos letras.">
+                                            <f:validateLength minimum="2" />
+                                        </p:inputText>
+                                        <p:outputLabel for="txtDescripcionCategoriaEditar" value="Descripcion: " />
+                                        <p:inputTextarea id="txtDescripcionCategoriaEditar" counter="descripcion" maxlength="100" 
+                                                         counterTemplate="{0} characters remaining." autoResize="false" 
+                                                         value = "#{categoriaBean.categoria.descripcion}"
+                                                         required="true" requiredMessage="La descripción no puede estar vacía"/>
+                                        <p:column/>
+                                        <h:outputText id="descripcion" />
+                                        <h:outputText value="Saltar al final: " />
+                                        <h:selectBooleanCheckbox value="#{categoriaBean.skip}" />
+
+                                    </p:panelGrid>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab id="productos" title="Productos">
+                                <p:panel header="Productos de la Categoria">
+                                    <p:dataTable id="tblAgregarProductosEditar" style="width: 700px;" 
+                                                     paginator ="true" paginatorPosition ="top"  rows="10" 
+                                                     var="p" value="#{productoBean.productoList}" 
+                                                     filteredValue="#{productoBean.filteredProducto}"
+                                                     selection="#{categoriaBean.categoria.productos}" 
+                                                     disabledSelection="#{categoriaBean.enabledRow(p)}"
+                                                     emptyMessage = "No hay datos de Productos" rowKey="#{p.idProducto}">
+
+                                            <f:facet name="header">Lista de Producto</f:facet>
+                                            <p:column selectionMode="multiple" style="width:16px;text-align:center" >
+                                                
+                                            </p:column>
+                                            <p:column headerText="ID" style="width:40px;text-align: center" filterBy="#{p.idProducto}" filterMatchMode="contains">
+                                                <h:outputText value="#{p.idProducto}" />
+                                            </p:column>
+                                            <p:column headerText="NOMBRE" style="width:300px;text-align: center" filterBy="#{p.nomProducto}" filterMatchMode="contains">
+                                                <h:outputText value="#{p.nomProducto}" />
+                                            </p:column>
+                                            <p:column headerText="MARCA" style="width:300px;text-align: center" filterBy="#{p.marca}" filterMatchMode="contains">
+                                                <h:outputText value="#{p.marca}" />
+                                            </p:column>
+
+                                    </p:dataTable>
+                                    <p:outputLabel value="Solo se permite agregar Productos. La categoria de los productos se modifica desde la ventana productos."
+                                                   style="color: red;"/>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab  id="confirm" title="Confirmación">
+
+                                <h:panelGrid  id="display" cellpadding="4" columns="2" style="margin: 0 auto;">
+
+                                    <h:outputText value="Nombre:" style="font-weight: bold;"/>
+                                    <h:outputText value="#{categoriaBean.categoria.nomCategoria}" />
+
+                                    <h:outputText value="Descripcion: " style="font-weight: bold;"/>
+                                    <h:outputText value="#{categoriaBean.categoria.descripcion}" />
+                                </h:panelGrid>    
+                                <p:fieldset legend="Productos">
+
+                                    <ui:repeat var="pro" value="#{categoriaBean.categoria.productos}" >
+                                        <p:panelGrid  id="categoriaPr"  columns="6" styleClass="noBorders" >
+
+                                            <p:outputLabel  value="ID: " style="font-weight: bold;"/>
+                                            <p:outputLabel  value="#{pro.idProducto}" />
+                                            <p:outputLabel  value="Nombre: " style="font-weight: bold;"/>
+                                            <p:outputLabel  value="#{pro.nomProducto}" />
+                                            <p:outputLabel  value="Marca: " style="font-weight: bold;"/>
+                                            <p:outputLabel value="#{pro.marca}" />
+                                        </p:panelGrid>
+                                    </ui:repeat>
+                                </p:fieldset>
+                                <p:column/>
+                                <h:panelGrid  cellpadding="4" columns="2" style="margin: 0 auto; float: right;">
+                                    <p:commandButton value="Guardar" actionListener="#{categoriaBean.updateCategoria()}"
+                                                     oncomplete="PF('wizEditar').loadStep('categoria', false);PF('_dlgEditarCategoria').hide();"
+                                                     update="growlCategoria"
+                                                     icon="ui-icon-disk">
+                                    
+                                    </p:commandButton>
+                                    <p:commandButton value="Cancelar"  
+                                                     oncomplete="PF('wizEditar').loadStep('categoria', false);PF('_dlgEditarCategoria').hide();"
+                                                     icon="ui-icon-closethick"/>
+                                </h:panelGrid>
+
+
+                            </p:tab>
+                        </p:wizard>
+                        
+                        
+                    </h:form>
+                    
+                </p:dialog>
+ 
+ 
+ 
+ <!-- ============================================================================ -->                
+ <!-- ===================    Eliminar Categoria   ================================ -->                        
+ <!-- ============================================================================ -->                 
+                
+
+                <p:dialog id="dlgEliminarCategoria" header="Eliminar Categoria" widgetVar="_dlgEliminarCategoria"
+                              resizable="false" modal="true" showEffect="explode" styleClass="noBorders" hideEffect="explode">
+                    <h:form id="formEliminarCategoria">
+                        
+                        <h:outputText value="Esta por eliminar la Categoria - #{categoriaBean.categoria.nomCategoria}- "/>
+                        <h:outputLabel value="¿Desea Cotinuar?"/>
+                        <p:panelGrid  columns="2" style="margin: 10px auto;">
+                            <p:commandButton value="Aceptar" actionListener="#{categoriaBean.deleteCategoria()}" 
+                                             update=":frmMostrarCategoria:tblCategoria" 
+                                             oncomplete="PF('_dlgEliminarCategoria').hide();" icon="ui-icon-trash"/>
+                            <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                             onclick="PF('_dlgEliminarCategoria').hide();"/>
+                        </p:panelGrid>
+                    </h:form>
+                </p:dialog>    
+                <!--  ============================================================================================================-->
+
+         
+
+        </ui:composition>
+
+    </body>
+</html>

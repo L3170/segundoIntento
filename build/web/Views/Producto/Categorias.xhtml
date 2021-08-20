@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+
+                <p:growl id="growl" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+                <h:form>
+                    <p:commandButton value="Nueva Categoria" 
+                                     actionListener="#{categoriaBean.prepararNuevaCategoria()}" 
+                                     oncomplete="PF('_dlgNuevaCategoria').show();"
+                                     icon="ui-icon-plusthick" title="Nueva Categoria">
+                        <p:resetInput target="dlgNuevaCategoria"/>
+                        <f:setPropertyActionListener target="#{categoriaBean.actualizarTabla}" value="frmMostrarCategoria" />
+                    </p:commandButton>    
+                </h:form>    
+
+                <h:form id="frmMostrarCategoria">
+
+                    <p:dataTable id="tblCategoria" paginator ="true" paginatorPosition ="top" 
+                                 rows="20" var="c" value="#{categoriaBean.categoriaList}" 
+                                 emptyMessage = "No hay datos de Categorias">
+                        <f:facet name="header">Lista de Categorias</f:facet>
+
+                        <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                            <h:outputText value="#{c.codCategoria}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                            <h:outputText value="#{c.nomCategoria}" />
+                        </p:column>
+                        <p:column headerText="DESCRIPCION" style="width:300px;text-align: center">
+                            <h:outputText value="#{c.descripcion}" />
+                        </p:column>
+                        <p:column headerText="ACTUALIZADO" style="width:100px;text-align: left">
+                            <h:outputText value="#{c.lastUpdate}" />
+                        </p:column>
+                        <p:column headerText="USUARIO QUE ACTUALIZO" style="width:100px;text-align: center">
+                            <h:outputText value="#{c.userUpdate}" />
+                        </p:column>
+                        <p:column headerText="VER" style="width:80px;text-align: center">
+                            <p:commandButton value="ver" icon="ui-icon-newwin" 
+                                             title="Ver Categoria" 
+                                             action="Categoria.xhtml" >
+                                <f:setPropertyActionListener target="#{categoriaBean.categoria}" 
+                                                             value="#{c}"/>
+                            </p:commandButton>
+                        </p:column>   
+                        <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                <p:commandButton oncomplete="PF('_dlgEditarCategoria').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Categoria"
+                                                 update = "frmEditarCategoria">
+                                    <f:setPropertyActionListener target="#{categoriaBean.categoria}" 
+                                                                 value="#{c}"/>
+                                    <f:setPropertyActionListener target="#{categoriaBean.actualizarTabla}" 
+                                                                 value="frmMostrarCategoria" />
+
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('_dlgEliminarCategoria').show();"
+                                                 update="dlgEliminarCategoria"
+                                                 icon="ui-icon-trash" title="Eliminar Categoria">
+                                    <f:setPropertyActionListener value="#{c}" target="#{categoriaBean.categoria}" />
+                                    <f:setPropertyActionListener target="#{categoriaBean.actualizarTabla}" 
+                                                                 value="frmMostrarCategoria" />                             
+                                </p:commandButton>
+                            </p:panelGrid>    
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>   
+
+
+                <!--  ============================================================================================================-->
+                <ui:include src="dialogsCategoria.xhtml" />
+                <!--  ============================================================================================================-->
+
+
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

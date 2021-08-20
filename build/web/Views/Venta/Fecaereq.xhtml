@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                
+                <p:panel header="Datos de la Facturacion Electronica Informada">
+                    
+                    <p:panel>
+                       
+                        <p:fieldset legend="Datos del FECAEReq">
+                            <h:form id="frmMostrarFecaereq" >
+                            <p:panelGrid columns="6" styleClass="noBorders">
+                                
+                                <p:outputLabel for="txtIdFeCAEReq" value="ID: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtIdFeCAEReq" value="#{fecaereqBean.fecaereq.idFeCaereq} " />
+
+                                <p:outputLabel for="txtCantRegistros" value="Cant. Registros: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCantRegistros" value="#{fecaereqBean.fecaereq.cantRegistros} " />
+
+                                <!-- LOS COMPROBANTES DEBEN SER DEL MISMO TIPO  -->
+                                <p:outputLabel for="txtCteTipo" value="Tipo de Comprobantes: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCteTipo" value="#{fecaereqBean.fecaereq.cteTipo} " />
+
+                                <p:outputLabel for="txtPtoVenta" value="Punto de Venta: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtPtoVenta" value="#{fecaereqBean.fecaereq.ptoVenta} " />
+
+                                <p:outputLabel for="txtConcepto" value="Concepto: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtConcepto" value="#{fecaereqBean.fecaereq.concepto} " />
+
+                                <p:outputLabel for="txtDocTipo" value="Tipo Documento: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtDocTipo" value="#{fecaereqBean.fecaereq.docTipo} " />
+
+                                <p:outputLabel for="txtDocNro" value="Nro. Documento: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtDocNro" value="#{fecaereqBean.fecaereq.docNro} " />
+
+                                <p:outputLabel for="txtCteDesde" value="Cte. Desde: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCteDesde" value="#{fecaereqBean.fecaereq.cteDesde} " />
+
+                                <p:outputLabel for="txtCteHasta" value="Cte. Hasta: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCteHasta" value="#{fecaereqBean.fecaereq.cteHasta} " />
+
+                                <p:outputLabel for="txtCteFch" value="Cte. Fecha: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCteFch" value="#{fecaereqBean.fecaereq.cbteFch} " />
+
+                                <p:outputLabel for="txtImpTotal" value="Importe Total: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpTotal" value="#{fecaereqBean.fecaereq.impTotal} " />
+
+                                <p:outputLabel for="txtImpTotConc" value="Imp. Total Conc.: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpTotConc" value="#{fecaereqBean.fecaereq.impTotConc} " />
+
+                                <p:outputLabel for="txtImpNeto" value="Importe Neto: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpNeto" value="#{fecaereqBean.fecaereq.impNeto} " />
+
+                                <p:outputLabel for="txtImpOpEx" value="Importe OpEx: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpOpEx" value="#{fecaereqBean.fecaereq.impOpEx} " />
+
+                                <p:outputLabel for="txtImpIva" value="Importe Iva: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpIva" value="#{fecaereqBean.fecaereq.impIva} " />
+                                
+                                <p:outputLabel for="txtImpTributo" value="Importe Iva: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtImpTributo" value="#{fecaereqBean.fecaereq.impTrib} " />
+                                
+                                 <p:outputLabel for="txtFchServDesde" value="Servicio Desde: " style="font-weight: bold;"/>
+                                 <p:outputLabel id="txtFchServDesde" value="#{fecaereqBean.fecaereq.fchServDesde} " />
+                                
+                                 <p:outputLabel for="txtFchServHasta" value="Servicio Hasta: " style="font-weight: bold;"/>
+                                 <p:outputLabel id="txtFchServHasta" value="#{fecaereqBean.fecaereq.fchServHasta} " />
+                                
+                                 <p:outputLabel for="txtFchVtoPago" value="Vencimiento de Pago: " style="font-weight: bold;"/>
+                                 <p:outputLabel id="txtFchVtoPago" value="#{fecaereqBean.fecaereq.fchVtoPago} " />
+                                
+                                 <p:outputLabel for="txtMonId" value="Moneda id: " style="font-weight: bold;"/>
+                                 <p:outputLabel id="txtMonId" value="#{fecaereqBean.fecaereq.monId} " />
+                                
+                                 <p:outputLabel for="txtMonContizacion" value="Cotizacion Moneda: " style="font-weight: bold;"/>
+                                 <p:outputLabel id="txtMonContizacion" value="#{fecaereqBean.fecaereq.monCotizacion} " />
+
+                                
+                            </p:panelGrid>
+                            </h:form>
+                        </p:fieldset>
+                    </p:panel>
+                    
+                    <p:panel header="Usuarios y Permisos">
+                         <h3> Usuarios y Permisos asociados a este Rol</h3>
+                         
+                         <p:accordionPanel dynamic="true" cache="true">
+                             <p:tab title="Lista de Usuarios">
+
+
+                                 <h:form id="frmMostrarUsuario">
+
+                                     <p:dataTable id="tablaUsuario" paginator ="true" paginatorPosition ="top" 
+                                                  rows="30" var="u" value="#{rolBean.rol.usuarios}" 
+                                                  emptyMessage = "No hay datos de Usuarios">
+                                         <f:facet name="header">Lista de Usuarios</f:facet>
+
+                                         <p:column headerText="CODIGO" style="width:50px;text-align: center">
+                                             <h:outputText value="#{u.idUsuario}" />
+                                         </p:column>
+                                         <p:column headerText="NOMBRE" style="width:250px;text-align: center">
+                                             <h:outputText value="#{u.nomUsuario}" />
+                                         </p:column>    
+                                         <p:column headerText="CLAVE" style="width:250px;text-align: center">
+                                             <h:outputText value="#{u.clave}" />
+                                         </p:column>
+                                        
+                                         <p:column headerText="ROL" style="width:100px;text-align: center">
+                                             <h:outputText value="#{u.rol.nomRol}" />
+                                         </p:column>
+                                         <p:column headerText="MODIFICADO" style="width:100px;text-align: center">
+                                             <h:outputText value="#{u.fchModificacion}" />
+                                         </p:column>
+                                         <p:column headerText="ADMINISTRADO POR" style="width:100px;text-align: center">
+                                             <h:outputText value="#{u.usuarioAdmin}" />
+                                         </p:column>
+                                     </p:dataTable>
+                                 </h:form>  
+
+
+                             </p:tab>
+
+                             
+                             
+                             <p:tab title="Lista de Permisos">
+                                 
+                                 <h:form id="frmMostrarPermiso">
+
+                                     <p:dataTable id="tblPermiso" paginator ="true" paginatorPosition ="top" 
+                                                  rows="30" var="pe" value="#{rolBean.rol.permisos}" 
+                                                  emptyMessage = "No hay datos de Permisos">
+                                         <f:facet name="header">Lista de Permisos</f:facet>
+
+                                         <p:column headerText="CODIGO" style="width:20px;text-align: center">
+                                             <h:outputText value="#{pe.idPermiso}" />
+                                         </p:column>
+                                         <p:column headerText="NOMBRE" style="width:70px;text-align: center">
+                                             <h:outputText value="#{pe.nombre}" />
+                                         </p:column>    
+                                         <p:column headerText="TIPO" style="width:100px;text-align: center">
+                                             <h:outputText value="#{pe.tipo}" />
+                                         </p:column>
+
+                                         <p:column headerText="DEPENDE DE" style="width:50px;text-align: center">
+                                             <h:outputText value="#{pe.permiso.nombre}" />
+                                         </p:column>
+                                         <p:column headerText="URL" style="width:302px;text-align: center">
+                                             <h:outputText value="#{pe.url}" />
+                                         </p:column>
+                                        
+                                        
+                                     </p:dataTable>
+                                 </h:form>   
+
+                                 
+                                 
+                                 
+                             </p:tab>
+                         </p:accordionPanel>
+
+                         
+                         
+                    </p:panel>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                </p:panel>
+                
+                
+                
+                
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

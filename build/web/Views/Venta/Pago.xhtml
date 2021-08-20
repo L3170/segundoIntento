@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+
+                <p:panel header="Datos de Pago">
+                    <p:panel>
+                        <p:fieldset legend="Datos de Pago">
+                            <h:form id="frmMostrarPago" >
+                                <p:panelGrid columns="6" styleClass="noBorders">
+
+                                    <p:outputLabel for="txtId" value="ID-sist: " style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtId" value="#{pagoBean.pago.idPago} " />
+                                    
+                                    <p:outputLabel for="txtCodigo" value="CODIGO: " style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtCodigo" value="#{pagoBean.pago.codCupon} " />
+                                    
+                                    <p:outputLabel for="txtModoDePago" value="MODO PAGO:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtModoDePago" value="#{pagoBean.pago.modopago.nombreModoPago}" />
+                                    
+                                    <p:outputLabel for="txtNombre" value="NOMBRE:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtNombre" value="#{pagoBean.pago.comprador.nomComprador}" />
+
+                                    <p:outputLabel for="txtApellido" value="APELLIDO:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtApellido" value="#{pagoBean.pago.comprador.apellido}" />
+                                    
+                                    <p:outputLabel for="txtCelular" value="CELULAR:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtCelular" value="#{pagoBean.pago.comprador.celular}" />
+                                    
+                                    <p:outputLabel for="txtDocumento" value="DOCUMENTO:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtDocumento" value="#{pagoBean.pago.comprador.docNro}" />
+                                    
+                                    <p:outputLabel for="txtEmail" value="EMAIL:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtEmail" value="#{pagoBean.pago.comprador.email}" />
+                                    
+                                    <p:outputLabel for="txtFecha" value="FECHA:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtFecha" value="#{pagoBean.pago.fechaPago}" />
+
+                                    <p:outputLabel for="txtMonto" value="MONTO:" style="font-weight: bold;"/>
+                                    <p:outputLabel id="txtMonto" value="#{pagoBean.pago.monto}" />
+                                    
+                                     <p:outputLabel for="txtDescripcion" value="DETALLE:" style="font-weight: bold;"/>
+                                      <p:outputLabel id="txtDescripcion" value="#{pagoBean.pago.detalle}" />
+
+                                </p:panelGrid>
+                            </h:form>
+                        </p:fieldset>
+                    </p:panel>
+                </p:panel>
+                    
+
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

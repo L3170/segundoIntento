@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+            xmlns:p="http://primefaces.org/ui"
+            xmlns:h="http://xmlns.jcp.org/jsf/html"
+            xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h1>Datos de Pagos</h1>
+                <p:growl id="growl" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+                
+                <h:form>
+                    <p:commandButton value="Nuevo Pago" 
+                                     actionListener="#{pagoBean.prepararNuevoPago()}" 
+                                     oncomplete="PF('_dlgNuevoPago').show();" 
+                                     icon="ui-icon-plusthick" title="Nuevo Pago">
+                     <p:resetInput target="dlgNuevoPago"/>
+                     <f:setPropertyActionListener target="#{pagoBean.actualizarTabla}" value="frmMostrarPago" />
+                    
+                    </p:commandButton>
+                </h:form>    
+
+                <h:form id="frmMostrarPago">
+
+                    <p:dataTable id="tablaPago" paginator ="true" paginatorPosition ="top" 
+                                 rows="20" var="p" value="#{pagoBean.pagos}" 
+                                 emptyMessage = "No hay datos de Pagos">
+                        <f:facet name="header">Lista de Pagos</f:facet>
+                        
+                        <p:column headerText="ID" style="width:50px;text-align: center">
+                            <h:outputText value="#{p.idPago}" />
+                        </p:column>
+                        <p:column headerText="ID-CUPON" style="width:100px;text-align: center">
+                            <h:outputText value="#{p.codCupon}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:200px;text-align: center">
+                            <h:outputText value="#{p.comprador.nomComprador}" />
+                        </p:column>
+                        <p:column headerText="APELLIDO" style="width:200px;text-align: center">
+                            <h:outputText value="#{p.comprador.apellido}" />
+                        </p:column>
+                        <p:column headerText="FECHA" style="width:80px;text-align: left">
+                            <h:outputText value="#{p.fechaPago}" />
+                        </p:column>
+                        <p:column headerText="MONTO" style="width:100px;text-align: center">
+                            <h:outputText value="#{p.monto}" />
+                        </p:column>
+                        <p:column headerText="MODO PAGO" style="width:60px;text-align: center">
+                            <h:outputText value="#{p.modopago.nombreModoPago}" />
+                        </p:column>
+                         <p:column headerText="VER" style="width:80px;text-align: center">
+                            <p:commandButton value="ver" icon="ui-icon-newwin" 
+                                             title="Ver Pago" 
+                                             action="Pago.xhtml" >
+                                <f:setPropertyActionListener target="#{pagoBean.pago}" 
+                                                             value="#{p}"/>
+                            </p:commandButton>
+                        </p:column>   
+                        
+                        <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                <p:commandButton oncomplete="PF('_dlgEditarPago').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Pago"
+                                                 update = ":frmEditarPago">
+                                    <f:setPropertyActionListener target="#{pagoBean.pago}" 
+                                                                 value="#{p}"/>
+                                    
+                                    <f:setPropertyActionListener target="#{pagoBean.actualizarTabla}" 
+                                                                 value="frmMostrarPago" />
+                                    
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('_dlgEliminarPago').show();"
+                                                 update="frmEliminarPago"
+                                                 icon="ui-icon-trash" title="Eliminar Pago">
+                                    <f:setPropertyActionListener value="#{p}" target="#{pagoBean.pago}" />
+                                    <f:setPropertyActionListener target="#{pagoBean.actualizarTabla}" 
+                                                                 value="frmMostrarPago" />
+                                </p:commandButton>
+                            </p:panelGrid>    
+                        </p:column>
+                        
+                    </p:dataTable>
+                </h:form>   
+                <!--  ============================================================================================================-->
+                <ui:include src="dialogsPago.xhtml" />
+                <!--  ============================================================================================================-->
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

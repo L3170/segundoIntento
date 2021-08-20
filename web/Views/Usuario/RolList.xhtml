@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+               
+                
+                <h1>Datos de Roles</h1>
+              
+              <p:growl id="growlRol" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+                <h:form>
+                    <p:commandButton value="Nuevo Rol" 
+                                     actionListener="#{rolBean.prepararNuevoRol()}" 
+                                     oncomplete="PF('_dlgNuevoRol').show();" 
+                                     icon="ui-icon-plusthick" title="Nuevo Rol"
+                                     update="dlgNuevoRol frmNuevoRol">
+                        <p:resetInput  target="dlgNuevoRol" />
+                        <!--  resetInput hace que los campos del dialog aparezcan en blanco... si bien se puede hace con el boton type= reset    -->
+                        <!-- En este caso si el formulario tiene un error de validación y se hace clic en el boton reset... no se vuelven a cero los valores del formulario -->              
+                        <f:setPropertyActionListener target="#{rolBean.actualizarTabla}"
+                                                     value="frmMostrarRoles" />
+                    </p:commandButton>
+                </h:form>    
+
+                <h:form id="frmMostrarRoles">
+
+                    <p:dataTable id="tblRol" paginator ="true" paginatorPosition ="top" 
+                                 rows="30" var="r" value="#{rolBean.rolList}" 
+                                 emptyMessage = "No hay datos de Roles">
+                        <f:facet name="header">Lista de Roles</f:facet>
+                        
+                        <p:column headerText="CODIGO" style="width:10px;text-align: center">
+                            <h:outputText value="#{r.idRol}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:150px;text-align: center">
+                            <h:outputText value="#{r.nomRol}" />
+                        </p:column>
+                        <p:column headerText="DESCRIPCION" style="width:150px;text-align: center">
+                            <h:outputText value="#{r.descripcion}" />
+                        </p:column>
+                       
+                         <p:column headerText="VER" style="width:20px;text-align: center">
+                             <p:commandButton value="ver" icon="ui-icon-newwin" title="Ver Permisos" 
+                                              action="Rol.xhtml" >
+                                              <f:setPropertyActionListener target="#{rolBean.rol}" 
+                                                                           value="#{r}"/>
+                             </p:commandButton>
+                        </p:column>
+                        
+                        <p:column style="width:50px;text-align: center">
+                            <p:panelGrid  columns="2" styleClass="noBorders" style="margin: 0 auto;">
+                                <p:commandButton oncomplete="PF('_dlgEditarRol').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Rol"
+                                                 update = ":frmEditarRol">
+                                    <f:setPropertyActionListener target="#{rolBean.rol}" 
+                                                                 value="#{r}"/>
+                                    
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('_dlgEliminarRol').show();"
+                                                 update="frmMostrarRoles"
+                                                 icon="ui-icon-trash" title="Eliminar Roles">
+                                    <f:setPropertyActionListener value="#{r}" target="#{rolBean.rol}" />
+                                                                 
+                                </p:commandButton>
+                            </p:panelGrid>    
+                        </p:column>
+                        
+                    </p:dataTable>
+                </h:form>   
+<!--  ============================================================================================================-->
+          
+ <!--  ============================================================================================================-->
+
+                    <p:dialog id="dlgEditarRol" header="Información Rol" widgetVar="_dlgEditarRol"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode" closable="false">
+                        <h:form id="frmEditarRol">
+                            <p:messages id="editarMensaje"    autoUpdate="false"/>
+                            <p:panelGrid  columns="2" styleClass="noBorders" style="margin: 0 auto;">
+                                
+                                 <p:outputLabel for="txtNombre" value="Nombre " />
+                                 <p:inputText id="txtNombre" value="#{rolBean.rol.nomRol}" 
+                                             required="true" requiredMessage="El nombre no puede estar vacío."
+                                             validatorMessage="Nombre: Use un mínimo de dos caracteres.">
+                                    <f:validateLength minimum="2"/>
+                                </p:inputText>
+                                  
+                                 <p:outputLabel for="txtDescripcion" value="Descripcion: " />
+                                <p:inputTextarea id="txtDescripcion" counter="descripcion" maxlength="100" 
+                                                 counterTemplate="{0} characters remaining." autoResize="false" 
+                                                 value = "#{rolBean.rol.descripcion}"
+                                                 required="true" requiredMessage="La descripción no puede estar vacía"/>
+                                <p:column/>
+                                <h:outputText id="descripcion" />
+                                <p:column/>
+                                <p:column>
+                                    <p:commandButton value="Guardar" actionListener="#{rolBean.updateRol()}" 
+                                                 update=":frmEditarRol, editarMensaje, growlRol"
+                                                 validateClient="true" icon="ui-icon-disk"/>
+                                <p:commandButton type="reset" value="Cancelar" onclick="PF('_dlgEditarRol').hide();"
+                                                 actionListener="#{rolBean.prepararNuevoRol()}"
+                                                 icon="ui-icon-closethick"/>
+                                </p:column>
+                            </p:panelGrid>
+                        </h:form>  
+                    </p:dialog>
+
+ <!--  ============================================================================================================-->
+                
+                <h:form id="frmEliminarRol">
+
+                    <p:dialog id="dlgEliminarRol" header="Eliminar Rol" widgetVar="_dlgEliminarRol"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode" closable="false" >
+                        <h:outputText value="Esta por eliminar un Rol ¿Cotinuar? "/>
+                            <p:panelGrid  columns="2" style="margin: 0 auto;" styleClass="noBorders">
+                                <p:commandButton value="Aceptar" actionListener="#{rolBean.deleteRol()}" 
+                                             update=":frmMostrarRoles:tblRol, growlRol"
+                                             oncomplete="PF('_dlgEliminarRol').hide();" icon="ui-icon-trash"/>
+                                <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                             onclick="PF('_dlgEliminarRol').hide();"/>
+                            </p:panelGrid>
+                    </p:dialog>
+                </h:form>   
+ <!--  ============================================================================================================-->
+                <ui:include src="dialogsRol.xhtml" />
+ <!--  ============================================================================================================-->
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

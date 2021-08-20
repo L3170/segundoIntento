@@ -1,0 +1,295 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+ <!-- 
+                            <p:outputLabel for="txtEmail" value="Email:"/>
+                            <p:inputText id="txtEmail" value="" required="true" 
+                                         requiredMessage="Ingrese un email"
+                                         validatorMessage="Incorrect e-mail…"
+                                         >
+                            <f:validateLength minimum="5" maximum="50" />
+                            <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />     
+                           --> 
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h1>Datos de los Usuarios</h1>
+
+                <p:growl id="growlUsuario" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+                <h:form>
+                    <p:commandButton value="Nuevo Usuario" 
+                                     actionListener="#{usuarioBean.prepararNuevoUsuario()}" 
+                                     oncomplete="PF('_dlgNuevoUsuario').show();" 
+                                     icon="ui-icon-plusthick" title="Nuevo Usuario">
+                    <p:resetInput  target="dlgNuevoUsuario" />
+                    <f:setPropertyActionListener target= "#{usuarioBean.actualizarTabla}" 
+                                                  value= "frmMostrarUsuario" />
+                    </p:commandButton>
+                </h:form>    
+
+                <h:form id="frmMostrarUsuario">
+
+                    <p:dataTable id="tablaUsuario" paginator ="true" paginatorPosition ="top" 
+                                 rows="30" var="u" value="#{usuarioBean.usuarioList}" 
+                                 emptyMessage = "No hay datos de Usuarios">
+                        <f:facet name="header">Lista de Usuarios</f:facet>
+
+                        <p:column headerText="CODIGO" style="width:50px;text-align: center">
+                            <h:outputText value="#{u.idUsuario}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:250px;text-align: center">
+                            <h:outputText value="#{u.nomUsuario}" />
+                        </p:column>    
+                        <p:column headerText="CLAVE" style="width:250px;text-align: center">
+                            <h:outputText value="#{u.clave}" />
+                        </p:column>
+                       
+                        <p:column headerText="ROL" style="width:100px;text-align: center">
+                            <h:outputText value="#{u.rol.nomRol}" />
+                        </p:column>
+                        <p:column headerText="MODIFICADO" style="width:100px;text-align: center">
+                            <h:outputText value="#{u.fchModificacion}" />
+                        </p:column>
+                        <p:column headerText="ADMINISTRADO POR" style="width:100px;text-align: center">
+                            <h:outputText value="#{u.usuarioAdmin}" />
+                        </p:column>
+
+                        <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                <p:commandButton oncomplete="PF('_dlgEditarUsuario').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Usuario"
+                                                 update = ":frmEditarUsuario">
+                                    <f:setPropertyActionListener target="#{usuarioBean.usuario}" 
+                                                                 value="#{u}"/>
+
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('dialogEliminarUsuario').show();"
+                                                 update="formEliminarUsuario:dlgEliminarUsuario"
+                                                 icon="ui-icon-trash" title="Eliminar Usuario">
+                                    <f:setPropertyActionListener value="#{u}" target="#{usuarioBean.usuario}" />
+
+                                </p:commandButton>
+                            </p:panelGrid>    
+                        </p:column>
+                    </p:dataTable>
+                </h:form>   
+                <!--  ============================================================================================================-->
+
+
+                <p:dialog id="dlgNuevoUsuario" header="Nuevo Usuario" widgetVar="_dlgNuevoUsuario"
+                          resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                    <h:form id="formNuevoUsuario">
+                        <p:messages id="mensaje" autoUpdate="true"/>
+                        <p:panelGrid  id="display" columns="2" style="margin: auto;" styleClass="noBorders" >
+                            <p:outputLabel for="txtUsuario" value="Nombre "/>
+                            <p:inputText id="txtUsuario" value="#{usuarioBean.usuario.nomUsuario}" required="true" 
+                                         requiredMessage="Ingrese un Usuario" 
+                                         validatorMessage="Nombre: Use un mínimo de dos caracteres">
+                                <f:validateLength minimum="2"/>
+                                <p:clientValidator/>
+                            </p:inputText>
+
+                            <p:outputLabel for="clave1" value="Clave:"/>
+                            <p:password id="clave1" match="clave2"  feedback="true" inline="true"
+                                        value="#{usuarioBean.usuario.clave}" 
+                                        validatorMessage="Las claves no coinciden."
+                                        weakLabel="Debil" goodLabel="Buena" strongLabel="Fuerte"  
+                                        required="true" requiredMessage="Ingrese una clave" >
+                            </p:password>
+
+
+                            <p:outputLabel for="clave2" value="Repetir Clave:"/>
+                            <p:password id="clave2" required="true" requiredMessage="Ingrese nuevamente la clave"
+                                        validatorMessage="Use un mínimo de dos caracteres">
+                                <f:validateLength minimum="2"/>
+                            </p:password>
+                          
+                        </p:panelGrid> 
+
+                        <p:fieldset legend="Rol">
+                            <p:outputLabel for="txtRol" value="Rol: " />
+                            <p:inputText  id="txtRol"  value="#{usuarioBean.usuario.rol.nomRol}" readonly="true"
+                                          required="true" requiredMessage="Elija un rol" validatorMessage="Elija un rol">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <p:commandButton value="Rol" oncomplete="PF('_dlgRol').show();"/>
+                        </p:fieldset>
+
+                        <h:panelGrid  id="botones" cellpadding="4" columns="2" style="margin: auto;" border="0">
+                            <p:commandButton value="Guardar" actionListener="#{usuarioBean.create()}"
+                                             update="formNuevoUsuario,txtRol , growlUsuario" 
+                                             icon="ui-icon-disk"
+                                             validateClient="true"
+                                             />
+                            <p:commandButton value="Cancelar" oncomplete="PF('_dlgNuevoUsuario').hide()" 
+                                             icon="ui-icon-closethick"/>
+                        </h:panelGrid>
+
+                    </h:form>        
+                </p:dialog>   
+
+                <!--  .............................    DIALOGO DE ROL         ..................................................-->
+
+                <p:dialog id="dlgRol" widgetVar="_dlgRol" modal="true" resizable="false" 
+                          showEffect="explode" hideEffect="explode">
+                    <h:form id="frmRol" >
+
+                        <p:dataTable id="tablaUsuario" style="width: 700px;" 
+                                     paginator ="true" paginatorPosition ="top" 
+                                     rows="10" var="r" value="#{rolBean.rolList}" 
+                                     emptyMessage = "No hay datos de Roles">
+                            <f:facet name="header">Lista de Roles</f:facet>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{r.idRol}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{r.nomRol}" />
+                            </p:column>
+                            <p:column style="width:100px;text-align: center">        
+                                <p:commandButton oncomplete="PF('_dlgNuevoUsuario').show();PF('_dlgRol').hide();"
+                                                 icon="ui-icon-check"
+                                                 title="Seleccionar Rol"
+                                                 update = "#{p:component('txtRol')}">
+
+                                    <f:setPropertyActionListener target="#{usuarioBean.usuario.rol}" 
+                                                                 value="#{r}"/>
+                                </p:commandButton>  
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" onclick="PF('_dlgRol').hide();" 
+                                         icon="ui-icon-closethick"/>
+                    </h:form>                         
+                </p:dialog>
+
+
+                <!--  ============================================================================================================-->
+
+
+                
+                    <p:dialog id="dlgEditarUsuario" header="Información de Usuario" widgetVar="_dlgEditarUsuario"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode" closable="false">
+                        <h:form id="frmEditarUsuario">
+                        <p:messages id="editarMensaje" autoUpdate="false"/>
+                        <p:panelGrid  id="display" columns="2" style="margin: auto;" styleClass="noBorders" >
+                            <p:outputLabel for="txtUsuario" value="Nombre "/>
+                            <p:inputText id="txtUsuario" value="#{usuarioBean.usuario.nomUsuario}" required="true" 
+                                         requiredMessage="Ingrese un Usuario" 
+                                         validatorMessage="Nombre: Use un mínimo de dos caracteres">
+                                <f:validateLength minimum="2"/>
+                                <p:clientValidator/>
+                            </p:inputText>
+
+                            <p:outputLabel for="clave1" value="Clave:"/>
+                            <p:password id="clave1" match="clave2"  feedback="true"
+                                        value="#{usuarioBean.usuario.clave}" 
+                                        validatorMessage="Las claves no coinciden."
+                                        weakLabel="Debil" goodLabel="Buena" strongLabel="Fuerte"  
+                                        required="true" requiredMessage="Ingrese una clave" redisplay="true" inline="true">
+                            </p:password>
+
+
+                            <p:outputLabel for="clave2" value="Repetir Clave:"/>
+                            <p:password id="clave2" required="true" requiredMessage="Ingrese nuevamente la clave"
+                                        validatorMessage="Use un mínimo de dos caracteres" redisplay="true"
+                                        value="#{usuarioBean.usuario.clave}">
+                                <f:validateLength minimum="2"/>
+                            </p:password>
+                          
+                        </p:panelGrid> 
+
+                        <p:fieldset legend="Rol">
+                            <p:outputLabel for="txtEditarRol" value="Rol: " />
+                            <p:inputText  id="txtEditarRol"  value="#{usuarioBean.usuario.rol.nomRol}" readonly="true"
+                                          required="true" requiredMessage="Elija un rol" validatorMessage="Elija un rol">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+                            <p:commandButton value="Rol" oncomplete="PF('_dlgEditarRol').show();"/>
+                        </p:fieldset>
+
+                        <h:panelGrid  id="botones" cellpadding="4" columns="2" style="margin: auto;" border="0">
+                            <p:commandButton type="submit" value="Guardar" actionListener="#{usuarioBean.update()}"
+                                             update=":frmEditarUsuario, editarMensaje , growlUsuario" 
+                                             icon="ui-icon-disk" validateClient="true" />
+                            <p:commandButton type="reset" value="Cancelar" onclick="PF('_dlgEditarUsuario').hide()" 
+                                             icon="ui-icon-closethick" actionListener="#{usuarioBean.prepararNuevoUsuario()}"/>
+                        </h:panelGrid>
+
+                    </h:form> 
+                    </p:dialog>
+                    
+                   
+                    <!--  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-->
+
+
+                    <p:dialog id="dlgEditarRol" widgetVar="_dlgEditarRol" 
+                              modal="true" resizable="false" 
+                              showEffect="explode" hideEffect="explode">
+                        <h:form id="frmEditRol">
+                        <p:dataTable id="tablaEditarRol" style="width: 700px;" 
+                                     paginator ="true" paginatorPosition ="top" 
+                                     rows="10" var="rol" value="#{rolBean.rolList}" 
+                                     emptyMessage = "No hay datos de Roles">
+                            <f:facet name="header">Lista de Roles</f:facet>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{rol.idRol}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{rol.nomRol}" />
+                            </p:column>
+                            <p:column style="width:100px;text-align: center">        
+                                <p:commandButton oncomplete="PF('_dlgEditarUsuario').show();PF('_dlgEditarRol').hide();"
+                                                 icon="ui-icon-check"
+                                                 title="Seleccionar Rol"
+                                                  update = "#{p:component('txtEditarRol')}">
+
+                                    <f:setPropertyActionListener target="#{usuarioBean.usuario.rol}" 
+                                                                 value="#{rol}"/>
+
+                                </p:commandButton>  
+
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" onclick="PF('dlgEditarRol').hide();" 
+                                         icon="ui-icon-closethick"/>
+                        </h:form> 
+                    </p:dialog>
+
+
+                
+                <!--  ============================================================================================================-->
+
+
+                <h:form id="formEliminarUsuario">
+
+                    <p:dialog id="dlgEliminarUsuario" header="Eliminar Usuario" widgetVar="dialogEliminarUsuario"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode" closable="false">
+                        <h:outputText value="Esta por eliminar el usuario  #{usuarioBean.usuario.nomUsuario}. " />
+                       <br/>
+                        <h:outputText value="  ¿Desea Cotinuar? "/>
+                        <br/><br/>
+                        <p:panelGrid  columns="2" style="margin: 0 auto;" styleClass="noBorders">
+                            <p:commandButton value="Aceptar" actionListener="#{usuarioBean.delete()}" 
+                                             update=":frmMostrarUsuario:tablaUsuario, growlUsuario" 
+                                             oncomplete="PF('dialogEliminarUsuario').hide();" icon="ui-icon-trash"/>
+                            <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                             onclick="PF('dialogEliminarUsuario').hide();"/>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>   
+                <!--  ============================================================================================================-->
+             
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,462 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                
+                <h1>Datos de los Permisos</h1>
+                <p:growl id="growlPermiso" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+                <h:form>
+                    <p:commandButton value="Nuevo Permiso" 
+                                     actionListener="#{permisoBean.prepararNuevoPermiso()}" 
+                                     oncomplete="PF('_dlgNuevoPermiso').show();" 
+                                     icon="ui-icon-plusthick" title="Nuevo Permiso"
+                                     update="dlgNuevoPermiso">
+                        <p:resetInput target="dlgNuevoPermiso"/>
+                        
+                    </p:commandButton>
+                </h:form>    
+                <h:form id="frmMostrarPermiso">
+
+                    <p:dataTable id="tblPermiso" paginator ="true" paginatorPosition ="top" 
+                                 rows="30" var="pe" value="#{permisoBean.permisos}" 
+                                 emptyMessage = "No hay datos de Permisos">
+                        <f:facet name="header">Lista de Permisos</f:facet>
+
+                        <p:column headerText="CODIGO" style="width:20px;text-align: center">
+                            <h:outputText value="#{pe.idPermiso}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:90px;text-align: center">
+                            <h:outputText value="#{pe.nombre}" />
+                        </p:column>    
+                        <p:column headerText="TIPO" style="width:70px;text-align: center">
+                            <h:outputText value="#{pe.tipo}" />
+                        </p:column>
+                        
+                        <p:column headerText="SUBPERMISO" style="width:50px;text-align: center">
+                            <h:outputText value="#{pe.permiso.nombre}" />
+                        </p:column>
+                        <p:column headerText="URL" style="width:302px;text-align: center">
+                            <h:outputText value="#{pe.url}" />
+                        </p:column>
+                        <p:column headerText="ICONO" style="width:70px;text-align: center">
+                            <h:outputText value="#{pe.icono}" />
+                        </p:column>
+                        
+                        <p:column headerText="PERMISOS" style="width:100px;text-align: center">
+                             <p:commandButton value="Permisos" icon="ui-icon-newwin" 
+                                              oncomplete="PF('_dlgMostarPermisos').show();" 
+                                              update = ":frmPermiso:tblMostrarPermisos"
+                                              title="Ver Permisos" >
+                                 <f:setPropertyActionListener target="#{permisoBean.permiso}" 
+                                                                           value="#{pe}"/>
+                             </p:commandButton>
+                        </p:column>
+                        
+                        <p:column headerText="ROLES" style="width:70px;text-align: center">
+                             <p:commandButton value="ver" icon="ui-icon-newwin" 
+                                              oncomplete="PF('_dlgMostarRoles').show();" 
+                                              update = ":frmRol:tblMostrarRoles"
+                                              title="Ver Roles" >
+                                 <f:setPropertyActionListener target="#{permisoBean.permiso}" 
+                                                                           value="#{pe}"/>
+                             </p:commandButton>
+                        </p:column>
+                        
+                         <p:column style="width:70px;text-align: center">
+                            <p:panelGrid  columns="2" styleClass="noBorders" style="margin: 0 auto;">
+                                <p:commandButton oncomplete="PF('_dlgModificarPermiso').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Permiso"
+                                                 update = ":frmModificarPermiso">
+                                    <f:setPropertyActionListener target="#{permisoBean.permiso}" 
+                                                                 value="#{pe}"/>
+                                    
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('_dlgEliminarPermiso').show();"
+                                                 update="frmMostrarPermiso"
+                                                 icon="ui-icon-trash" title="Eliminar Permiso">
+                                    <f:setPropertyActionListener value="#{pe}"
+                                                                 target="#{permisoBean.permiso}" />
+                                                                 
+                                </p:commandButton>
+                            </p:panelGrid>    
+                        </p:column>
+                    </p:dataTable>
+                </h:form>   
+                <!--  ============================================================================================================-->
+
+<!--  .............................    DIALOGO MOSTRAR ROLES     ..................................................-->
+
+                <p:dialog id="dlgMostarRoles" widgetVar="_dlgMostarRoles" modal="true" resizable="false" 
+                          showEffect="explode" hideEffect="explode">
+                    <h:form id="frmRol" >
+
+                        <p:dataTable id="tblMostrarRoles" style="width: 700px;" 
+                                     paginator ="true" paginatorPosition ="top" 
+                                     rows="10" var="rol" value="#{permisoBean.permiso.rols}" 
+                                     emptyMessage = "No hay datos de Roles">
+                            <f:facet name="header">Lista de Roles</f:facet>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{rol.idRol}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{rol.nomRol}" />
+                            </p:column>
+                           
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" onclick="PF('_dlgMostarRoles').hide();" 
+                                         icon="ui-icon-closethick"/>
+                    </h:form>                         
+                </p:dialog>
+<!--  ============================================================================================================-->
+
+<!--  .............................    DIALOGO MOSTRAR PERMISOS     ..................................................-->
+
+                <p:dialog id="dlgMostarPermisos" widgetVar="_dlgMostarPermisos" modal="true" resizable="false" 
+                          showEffect="explode" hideEffect="explode">
+                    <h:form id="frmPermiso" >
+
+                        <p:dataTable id="tblMostrarPermisos" style="width: 700px;" 
+                                     paginator ="true" paginatorPosition ="top" 
+                                     rows="10" var="permiso" value="#{permisoBean.permiso.permisos}" 
+                                     emptyMessage = "No hay datos de Permisos">
+                            <f:facet name="header">Lista de Permisos</f:facet>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{permiso.idPermiso}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{permiso.nombre}" />
+                            </p:column>
+                           
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" onclick="PF('_dlgMostarPermisos').hide();" 
+                                         icon="ui-icon-closethick"/>
+                    </h:form>                         
+                </p:dialog>
+
+ <!--  ============================================================================================================-->
+
+                <p:dialog id="dlgNuevoPermiso" header="Nuevo Permiso" widgetVar="_dlgNuevoPermiso"
+                          resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                    <h:form id="frmNuevoPermiso">
+                        <p:messages id="mensaje" autoUpdate="true"/>
+                        <p:panelGrid  id="pngNuevoPermiso" columns="2" style="margin: auto;" styleClass="noBorders" >
+
+                            <p:outputLabel for="txtNombre" value="Nombre "/>
+                            <p:inputText id="txtNombre" value="#{permisoBean.permiso.nombre}" required="true" 
+                                         requiredMessage="Ingrese un Permiso" 
+                                         validatorMessage="Nombre: Use un mínimo de dos caracteres">
+                                <f:validateLength minimum="2"/>
+                                <p:clientValidator/>
+                            </p:inputText>
+
+                            <p:outputLabel for="orMenuNuevo" value="Tipo Menu: "/>
+                            <p:selectOneRadio id="orMenuNuevo" value="#{permisoBean.permiso.tipo}" 
+                                              required="true" requiredMessage="Seleccione el tipo de menu.">
+                                <f:selectItem itemValue="submenu" itemLabel="submenu"/>
+                                <f:selectItem itemValue="menuitem" itemLabel="menuitem"/>    
+                            </p:selectOneRadio>
+                            <p:outputLabel for="txtIconoNuevo" value="Icono: "/>
+                            <p:inputText id="txtIconoNuevo" value="#{permisoBean.permiso.icono}" required="true" 
+                                         requiredMessage="Ingrese un Permiso" 
+                                         validatorMessage="Nombre: Use un mínimo de dos caracteres">
+                                <f:validateLength minimum="2"/>
+                                <p:clientValidator/>
+                            </p:inputText>
+                            <p:outputLabel for="txtURLNuevo" value="URL: "/>
+                            <p:inputText id="txtURLNuevo" value="#{permisoBean.permiso.url}" required="true" 
+                                         requiredMessage="Ingrese la URL" 
+                                         validatorMessage="Nombre: Use un mínimo de dos caracteres">
+                                <f:validateLength minimum="2"/>
+                                <p:clientValidator/>
+                            </p:inputText>
+
+                        </p:panelGrid> 
+                       <p:fieldset legend="Menu">
+                            <p:outputLabel for="txtMenuPadre" value="Menu Padre: " />
+                            <p:inputText  id="txtMenuPadre"  value="#{permisoBean.permiso.permiso.nombre}" readonly="true"/>
+                            <p:commandButton value="Menu" oncomplete="PF('_dlgSubPermiso').show();"/>
+                        </p:fieldset>
+
+                        <p:fieldset legend="Roles">
+                            <p:outputLabel for="opRoles" value="Roles: " />
+                            <p:outputPanel id="opRoles">
+                                <ui:repeat value="#{permisoBean.permiso.rols}" var="rol">
+                                    <h:outputText value="#{rol.idRol} - #{rol.nomRol} - #{rol.descripcion}" style="display:block"/>
+                                </ui:repeat>
+                            </p:outputPanel>
+
+                            <p:commandButton value="Roles" oncomplete="PF('_dlgAgregarRoles').show();"/>
+                        </p:fieldset>
+
+                        <h:panelGrid  id="botonesNuevo" cellpadding="4" columns="2" style="margin: auto;" border="0">
+                            <p:commandButton value="Guardar" actionListener="#{permisoBean.create()}"
+                                             update="frmNuevoPermiso, growlPermiso" 
+                                             icon="ui-icon-disk"
+                                             validateClient="true"
+                                             />
+                            <p:commandButton value="Cancelar" oncomplete="PF('_dlgNuevoPermiso').hide()" 
+                                             icon="ui-icon-closethick"/>
+                        </h:panelGrid>
+
+                    </h:form>        
+                </p:dialog>   
+
+                
+                  <!--  .............................    DIALOGO SUBMENU        ..................................................-->
+
+                <p:dialog id="dlgSubPermiso" widgetVar="_dlgSubPermiso" modal="true" resizable="false" 
+                          showEffect="explode" hideEffect="explode">
+                    <h:form id="frmSubMenu" >
+
+                        <p:dataTable id="tblSubMenu" style="width: 700px;" 
+                                     paginator ="true" paginatorPosition ="top" 
+                                     rows="10" var="m" value="#{permisoBean.permisos}" 
+                                     emptyMessage = "No hay datos de Permisos">
+                            <f:facet name="header">Lista de Permisos</f:facet>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{m.idPermiso}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{m.nombre}" />
+                            </p:column>
+                            <p:column style="width:100px;text-align: center">        
+                                <p:commandButton oncomplete="PF('_dlgNuevoPermiso').show();PF('_dlgSubPermiso').hide();"
+                                                 icon="ui-icon-check"
+                                                 title="Seleccionar Permiso"
+                                                 update = "#{p:component('txtMenuPadre')}">
+
+                                    <f:setPropertyActionListener target="#{permisoBean.permiso.permiso}" 
+                                                                 value="#{m}"/>
+                                </p:commandButton>  
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" onclick="PF('_dlgSubPermiso').hide();" 
+                                         icon="ui-icon-closethick"/>
+                    </h:form>                         
+                </p:dialog>
+
+
+                <!--  ============================================================================================================-->
+
+<!--...........................................    DIALOGO DE AGRAGAR ROLES         .............................................-->
+                
+                
+                <p:dialog id="dlgAgregarRoles" widgetVar="_dlgAgregarRoles" modal="true" resizable="false" 
+                          showEffect="explode" hideEffect="explode">
+                    <h:form id="frmAgregarRoles" >
+                        <p:dataTable id="tblAgregarRoles" style="width: 700px;" 
+                                     paginator ="true" paginatorPosition ="top" 
+                                     rows="10" var="r" value="#{rolBean.rolList}" 
+                                     selection="#{permisoBean.permiso.rols}"
+                                     emptyMessage = "No hay datos de Roles" rowKey="#{r.idRol}">
+                            
+                            <f:facet name="header">Lista de Roles</f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{r.idRol}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{r.nomRol}" />
+                            </p:column>
+                            
+                            <f:facet name="footer">
+                                <p:commandButton oncomplete="PF('_dlgAgregarRoles').hide();PF('_dlgNuevoPermiso').show();"
+                                                 icon="ui-icon-check"
+                                                 title="Seleccionar Subpermiso"
+                                                 value="Listo"
+                                                 update = "#{p:component('opRoles')}">
+
+                                </p:commandButton>  
+                            </f:facet>
+                            
+                        </p:dataTable>
+                        
+                    </h:form>                         
+                </p:dialog>
+
+
+
+<!--  =============================================================================================================================-->
+                
+
+                <h:form id="frmEliminarPermiso">
+                    <p:dialog id="dlgEliminarPermiso" header="Eliminar Permiso" widgetVar="_dlgEliminarPermiso"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode" closable="false">
+                        <h:outputText value="Esta por eliminar el permiso  #{permisoBean.permiso.nombre}" />
+                        <h:outputText value="  ¿Desea Cotinuar? "/>              
+                        <p:panelGrid  columns="2" style="margin: 0 auto;" styleClass="noBorders">
+                            <p:commandButton value="Aceptar" actionListener="#{permisoBean.delete()}" 
+                                             update=":frmMostrarPermiso:tblPermiso, growlPermiso" 
+                                             oncomplete="PF('_dlgEliminarPermiso').hide();" icon="ui-icon-trash"/>
+                            <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                             onclick="PF('_dlgEliminarPermiso').hide();"/>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>   
+<!--  ============================================================================================================-->
+<!--  ==================================      DIALOG MODIFICAR PERMISO        ====================================-->
+ <!--  ============================================================================================================-->
+
+                <p:dialog id="dlgModificarPermiso" header="Modificar Permiso" widgetVar="_dlgModificarPermiso"
+                          resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                    <h:form id="frmModificarPermiso">
+                        <p:messages id="mensajeModificar" autoUpdate="true"/>
+                        <p:panelGrid  id="pngModificarPermiso" columns="2" style="margin: auto;" styleClass="noBorders" >
+
+                            <p:outputLabel for="txtModificarNombre" value="Nombre "/>
+                            <p:inputText id="txtModificarNombre" value="#{permisoBean.permiso.nombre}" required="true" 
+                                         requiredMessage="Ingrese un Permiso" 
+                                         validatorMessage="Nombre: Use un mínimo de dos caracteres">
+                                <f:validateLength minimum="2"/>
+                                <p:clientValidator/>
+                            </p:inputText>
+
+                            <p:outputLabel for="orMenu" value="Tipo Menu: "/>
+                            <p:selectOneRadio id="orMenu" value="#{permisoBean.permiso.tipo}" 
+                                              required="true" requiredMessage="Seleccione el tipo de menu.">
+                                <f:selectItem itemValue="submenu" itemLabel="submenu"/>
+                                <f:selectItem itemValue="menuitem" itemLabel="menuitem"/>    
+                            </p:selectOneRadio>
+                            <p:outputLabel for="txtIcono" value="Icono: "/>
+                            <p:inputText id="txtIcono" value="#{permisoBean.permiso.icono}" 
+                                         validatorMessage="Nombre: Use un mínimo de dos caracteres">
+                                <f:validateLength minimum="2"/>
+                                <p:clientValidator/>
+                            </p:inputText>
+                            <p:outputLabel for="txtURL" value="URL: "/>
+                            <p:inputText id="txtURL" value="#{permisoBean.permiso.url}" required="true" 
+                                         requiredMessage="Ingrese la URL" 
+                                         validatorMessage="Nombre: Use un mínimo de dos caracteres">
+                                <f:validateLength minimum="2"/>
+                                <p:clientValidator/>
+                            </p:inputText>
+
+                        </p:panelGrid> 
+                       <p:fieldset legend="Menu">
+                            <p:outputLabel for="txtModificarMenuPadre" value="Menu Padre: " />
+                            <p:inputText  id="txtModificarMenuPadre"  value="#{permisoBean.permiso.permiso.nombre}" readonly="true"
+                                          required="true" requiredMessage="Elija un menu" validatorMessage="Elija un menu">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <p:commandButton value="Menu" oncomplete="PF('_dlgModificarSubPermiso').show();"/>
+                        </p:fieldset>
+
+                        <p:fieldset legend="Roles">
+                            <p:outputLabel for="opModificarRoles" value="Roles: " />
+                            <p:outputPanel id="opModificarRoles">
+                                <ui:repeat value="#{permisoBean.permiso.rols}" var="rol">
+                                    <h:outputText value="#{rol.idRol} - #{rol.nomRol} - #{rol.descripcion}" style="display:block"/>
+                                </ui:repeat>
+                            </p:outputPanel>
+
+                            <p:commandButton value="Roles" oncomplete="PF('_dlgModificarRoles').show();"/>
+                        </p:fieldset>
+
+                        <h:panelGrid  id="botones" cellpadding="4" columns="2" style="margin: auto;" border="0">
+                            <p:commandButton value="Guardar" actionListener="#{permisoBean.update()}"
+                                             update="frmModificarPermiso, growlPermiso" 
+                                             icon="ui-icon-disk"
+                                             validateClient="true"
+                                             />
+                            <p:commandButton value="Cancelar" oncomplete="PF('_dlgModificarPermiso').hide()" 
+                                             icon="ui-icon-closethick"/>
+                        </h:panelGrid>
+
+                    </h:form>        
+                </p:dialog>   
+
+                
+                  <!--  .............................    DIALOGO SUBMENU        ..................................................-->
+
+                <p:dialog id="dlgModificarSubPermiso" widgetVar="_dlgModificarSubPermiso" modal="true" resizable="false" 
+                          showEffect="explode" hideEffect="explode">
+                    <h:form id="frmModificarSubMenu" >
+
+                        <p:dataTable id="tblModificarSubMenu" style="width: 700px;" 
+                                     paginator ="true" paginatorPosition ="top" 
+                                     rows="10" var="m" value="#{permisoBean.permisos}" 
+                                     emptyMessage = "No hay datos de Permisos">
+                            <f:facet name="header">Lista de Permisos</f:facet>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{m.idPermiso}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{m.nombre}" />
+                            </p:column>
+                            <p:column style="width:100px;text-align: center">        
+                                <p:commandButton oncomplete="PF('_dlgModificarSubPermiso').hide();PF('_dlgModificarPermiso').show();"
+                                                 icon="ui-icon-check"
+                                                 title="Seleccionar Permiso"
+                                                 update = "#{p:component('txtModificarMenuPadre')}">
+
+                                    <f:setPropertyActionListener target="#{permisoBean.permiso.permiso}" 
+                                                                 value="#{m}"/>
+                                </p:commandButton>  
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" onclick="PF('_dlgModificarSubPermiso').hide();" 
+                                         icon="ui-icon-closethick"/>
+                    </h:form>                         
+                </p:dialog>
+
+
+<!--  ==========================================================================================================================-->
+
+<!--...........................................    DIALOGO DE AGRAGAR ROLES         .............................................-->
+                
+                
+                <p:dialog id="dlgModificarRoles" widgetVar="_dlgModificarRoles" modal="true" resizable="false" 
+                          showEffect="explode" hideEffect="explode">
+                    <h:form id="frmModificarRoles" >
+                        <p:dataTable id="tblModificarRoles" style="width: 700px;" 
+                                     paginator ="true" paginatorPosition ="top" 
+                                     rows="10" var="r" value="#{rolBean.rolList}" 
+                                     selection="#{permisoBean.permiso.rols}"
+                                     emptyMessage = "No hay datos de Roles" rowKey="#{r.idRol}">
+                            
+                            <f:facet name="header">Lista de Roles</f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{r.idRol}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{r.nomRol}" />
+                            </p:column>
+                            
+                            <f:facet name="footer">
+                                <p:commandButton oncomplete="PF('_dlgModificarRoles').hide();PF('_dlgModificarPermiso').show();"
+                                                 icon="ui-icon-check"
+                                                 title="Seleccionar Subpermiso"
+                                                 value="Listo"
+                                                 update = "#{p:component('opModificarRoles')}">
+
+                                </p:commandButton>  
+                            </f:facet>
+                            
+                        </p:dataTable>
+                        
+                    </h:form>                         
+                </p:dialog>
+
+
+
+                <!--  ============================================================================================================-->
+
+                
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

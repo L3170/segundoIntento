@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+       
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+             
+            
+            <ui:define name="content">
+                 <p:growl id="growlProducto" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+             
+                  <h1>Información de Productos</h1>
+                <h:form id="frmCrearProducto">
+                    <p:commandButton value="Nuevo Producto" 
+                                     actionListener="#{productoBean.prepararNuevoProducto()}" 
+                                     oncomplete="PF('_dlgNuevoProducto').show();" 
+                                     update ="dlgNuevoProducto frmNuevoProducto "
+                                     icon="ui-icon-plusthick" title="Nuevo Producto">
+                        <f:setPropertyActionListener target="#{productoBean.actualizarTabla}" value="formMostrarProducto" />
+                    </p:commandButton>
+                        
+                </h:form>    
+
+                <h:form id="formMostrarProducto">
+
+                    <p:dataTable id="tablaProducto" paginator ="true" paginatorPosition ="top" 
+                                 rows="30" var="p" value="#{productoBean.productoList}" 
+                                 emptyMessage = "No hay datos de Productos">
+                        <f:facet name="header">Lista de Productos</f:facet>
+                        
+                        <p:column headerText="CODIGO" style="width:50px;text-align: center">
+                            <h:outputText value="#{p.idProducto}" />
+                        </p:column>
+
+                        <p:column headerText="NOMBRE" style="width:200px;text-align: center">
+                            <h:outputText value="#{p.nomProducto}" />
+                        </p:column>
+
+                        <p:column headerText="MARCA" style="width:150px;text-align: center">
+                            <h:outputText value="#{p.marca}" />
+                        </p:column>
+                        
+                        <p:column headerText="CATEGORIA" style="width:150px;text-align: center">
+                            <h:outputText value="#{p.categoria.nomCategoria}" />
+                        </p:column>
+                        
+                        <p:column headerText="CANTIDAD x UNIDAD" style="width:50px;text-align: center">
+                            <h:outputText value="#{p.cantidadXunidad}" />
+                        </p:column>
+
+                        <p:column headerText="STOCK" style="width:50px;text-align: center">
+                            <h:outputText value="#{p.unidadEnStock}" />
+                        </p:column>
+
+                        <p:column headerText="VENCIMIENTO" style="width:50px;text-align: center">
+                            <h:outputText value="#{p.fechaVto}" />
+                        </p:column>
+                        
+                        <p:column headerText="PRECIO COMPRA" style="width:100px;text-align: center">
+                            <h:outputText value="#{p.precioCompra}" />
+                        </p:column>
+                        
+                        <p:column headerText="PRECIO VENTA" style="width:100px;text-align: center">
+                            <h:outputText value="#{p.precioVenta}" />
+                        </p:column>
+                        
+                         <p:column headerText="OFERTA" style="width:100px;text-align: center">
+                             <h:outputText value="#{p.oferta}" />
+                        </p:column>
+                        
+                        <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" style="margin: 0 auto; border-style: hidden;">
+                                <p:commandButton oncomplete="PF('dlgEditarProducto').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Producto"
+                                                 update = ":formEditarProducto">
+                                    <f:setPropertyActionListener target="#{productoBean.producto}" 
+                                                                 value="#{p}"/>
+                                    
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('dialogEliminarProducto').show();"
+                                                 update=":formMostrarProducto:tablaProducto"
+                                                 icon="ui-icon-trash" title="Eliminar Producto">
+                                    <f:setPropertyActionListener value="#{p}" target="#{productoBean.producto}" />
+                                                                 
+                                </p:commandButton>
+                            </p:panelGrid>    
+                        </p:column>
+                        
+                    </p:dataTable>
+                </h:form>   
+<!--  ============================================================================================================-->
+            <ui:include src="NuevoProducto.xhtml" />
+ <!--  ============================================================================================================-->
+          
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

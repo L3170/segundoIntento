@@ -1,0 +1,434 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    
+        
+        <ui:composition>
+            
+       <!-- ============================================================================ -->                
+       <!-- =====================    Nuevo Comprador    ================================== -->                        
+       <!-- ============================================================================ -->  
+            
+        <p:dialog id="dlgNuevoComprador" header="Información del Comprador" widgetVar="_dlgNuevoComprador"
+                  resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+            <h:form id="formNuevoComprador" >
+                <p:messages id="mensaje" autoUpdate="true"/>
+                <h:panelGrid  id="display" cellpadding="4" columns="2" style="margin: 0 auto;">
+
+                    <p:outputLabel id="lblNuevoTipoDocumento" for="txtNuevoTipoDocumento" value="Tipo de Documento: " />
+                    <p:column>
+                        <p:inputText  id="txtNuevoTipoDocumento"  value="#{compradorBean.comprador.doctipo}" 
+                                      readonly="true" required="true" requiredMessage="Elija un tipo de Documento." 
+                                      validatorMessage="Elija un tipo de Documento.">
+                                <f:validateLength minimum="2" />
+                        </p:inputText>
+                        <p:commandButton value="tipo documento" 
+                                         oncomplete="PF('_dlgNuevoTipoDocumento').show();"
+                                         update='frmNuevoTipoDocumento'/>
+                    </p:column>
+                    
+                    <p:outputLabel for="txtNuevoDocumento" value="Número de Documento: " />
+                    <p:inputText id="txtNuevoDocumento" value="#{compradorBean.comprador.docNro}" 
+                                 required="true" requiredMessage="Ingrese el Número de Documento"
+                                 validatorMessage="Doc Numero: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtNuevoNombre" value="Nombre:" />
+                    <p:inputText id="txtNuevoNombre" value="#{compradorBean.comprador.nomComprador}" 
+                                 required="true" requiredMessage="Ingrese el Nombre del Comprador"
+                                 validatorMessage="Nombre: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtNuevoApellido" value="Apellido:" />
+                    <p:inputText id="txtNuevoApellido" value="#{compradorBean.comprador.apellido}" 
+                                 required="true" requiredMessage="Ingrese el Apellido del Comprador"
+                                 validatorMessage="Apellido: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtNuevoDomicilio" value="Domicilio:" />
+                    <p:inputText id="txtNuevoDomicilio" value="#{compradorBean.comprador.direccion}" 
+                                 required="true" requiredMessage="Ingrese el domicilio del Comprador."
+                                 validatorMessage="Domicilio: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+                    <p:column>
+                        <p:outputLabel for="txtNuevoPiso" value="piso:" />
+                        <p:inputText id="txtNuevoPiso" value="#{compradorBean.comprador.piso}"/>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel for="txtNuevoDpto" value="Departamento:" />
+                        <p:inputText id="txtNuevoDpto" value="#{compradorBean.comprador.dpto}" />
+                    </p:column>  
+                    <p:outputLabel for="txtNuevoTelefono" value="Telefono:" />
+                    <p:inputText id="txtNuevoTelefono" value="#{compradorBean.comprador.telefono}" 
+                                 validatorMessage="Telefono: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtNuevoCelular" value="Celular:" />
+                    <p:inputText id="txtNuevoCelular" value="#{compradorBean.comprador.celular}" 
+                                 validatorMessage="Celular: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtNuevoEmail" value="Email:" />
+                    <p:inputText id="txtNuevoEmail" value="#{compradorBean.comprador.email}" 
+                                 validatorMessage="Email: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="NuevoNacimiento" value="Fecha Nacimiento: " />
+                    <p:calendar id="NuevoNacimiento" value="#{compradorBean.comprador.fchNacimiento}" navigator="true" 
+                                mode="popup" pattern="MM/dd/yyyy HH:mm" showOn="button" showButtonPanel="true"/>
+
+                    <p:outputLabel id="lblNuevaLocalidad" for="txtNuevaLocalidad" value="Localidad: " />
+                    <p:column>
+                        <p:inputText  id="txtNuevaLocalidad"  value="#{compradorBean.comprador.localidad.nomLocalidad}" 
+                                      readonly="true" required="true" requiredMessage="Elija una Localidad" 
+                                      validatorMessage="Elija una Localidad">
+                            <f:validateLength minimum="2" />
+                        </p:inputText>
+                        <p:commandButton value="Localidad" 
+                                         oncomplete="PF('_dlgNuevaLocalidad').show();"
+                                         update='formNuevaLocalidad'/>
+                    </p:column>
+
+                    <p:outputLabel id="lblNuevaProvincia" for="txtNuevaProvincia" value="Provincia: " />
+                    <p:inputText  id="txtNuevaProvincia"  value="#{compradorBean.comprador.localidad.provincia.nomProvincia}" 
+                                  readonly="true" required="true" requiredMessage="Elija una Provincia" 
+                                  validatorMessage="Elija una Provincia">
+                        <f:validateLength minimum="2" />
+                    </p:inputText>
+
+
+                    <p:commandButton value="Guardar" actionListener="#{compradorBean.create()}" 
+                                     update="#{compradorBean.actualizarTabla}"
+                                     oncomplete="PF('dlgNuevoComprador').hide()" icon="ui-icon-disk"/>
+                    <p:commandButton value="Cancelar" oncomplete="PF('_dlgNuevoComprador').hide()" icon="ui-icon-closethick"/>
+                </h:panelGrid>
+            </h:form>          
+ </p:dialog>
+              <!--  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-->
+
+            <p:dialog id="dlgNuevoTipoDocumento" widgetVar="_dlgNuevoTipoDocumento" modal="true" resizable="false" 
+                      appendTo="@(body)" showEffect="explode" hideEffect="explode">
+                <h:form id="frmNuevoTipoDocumento">
+
+                    <p:dataTable id="tblNuevoTipoDocumento" widgetVar="_tblNuevoTipoDocumento" 
+                                 style="width: 700px;" paginator ="true" paginatorPosition ="top" 
+                                 rows="10" var="docTipo" value="#{afipBean.documentoTipoList}" 
+                                 emptyMessage = "No se encontraron los tipos de documentos"
+                                 filteredValue="#{afipBean.filtroDocumentoTipoList}">
+                        <f:facet name="header">
+                            <p:outputPanel style="text-align: right;">
+                                <h:outputText value="Buscar en todos: "/>
+                                <p:inputText id="filtroGlobal" onkeyup="PF('_tblNuevoTipoDocumento').filter()"
+                                             style="width: 150px;" placeholder="palabra clave" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="CODIGO" filterBy="#{docTipo.idDoc}"
+                                  filterMatchMode="contains" style="width:50px;text-align: center" >
+                            <h:outputText value="#{docTipo.idDoc}" />
+                        </p:column>
+                        <p:column headerText="DESCRIPCION" filterBy="#{docTipo.descripcion}"
+                                  filterMatchMode="contains"
+                                  style="width:150px;text-align: center">
+
+                            <h:outputText value="#{docTipo.descripcion}" />
+                        </p:column>
+                        <p:column headerText="DESDE" style="width:150px;text-align: center">
+                        <h:outputText value="#{docTipo.fchDesde}" />
+                        </p:column>
+                        <p:column headerText="HASTA" style="width:150px;text-align: center">
+                            <h:outputText value="#{docTipo.fchHasta}" />
+                        </p:column>
+                        <p:column style="width:50px;text-align: center">        
+                            <p:commandButton oncomplete="PF('_dlgNuevoComprador').show();PF('_dlgNuevoTipoDocumento').hide();"
+                                             icon="ui-icon-check"
+                                             title="Seleccionar tipo de Documento"
+                                              update="#{p:component('txtNuevoTipoDocumento')}">
+
+                                <f:setPropertyActionListener target="#{compradorBean.comprador.doctipo}" 
+                                                             value="#{docTipo}"/>
+                            </p:commandButton>  
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Cerrar" onclick="PF('_dlgNuevoComprador').show();
+                            PF('_dlgNuevoTipoDocumento').hide();" 
+                                     icon="ui-icon-closethick"/>
+                </h:form>           
+            </p:dialog>
+            <!--  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-->
+            
+            <p:dialog id="dlgNuevaLocalidad" widgetVar="_dlgNuevaLocalidad" modal="true" resizable="false" 
+                      appendTo="@(body)" showEffect="explode" hideEffect="explode">
+                <h:form id="formNuevaLocalidad">
+
+                    <p:dataTable id="tblNuevaLocalidad" widgetVar="_tblNuevaLocalidad" 
+                                 style="width: 700px;" 
+                                 paginator ="true" paginatorPosition ="top" 
+                                 rows="10" var="loc" value="#{provinciaLocalidadBean.localidadList}" 
+                                 emptyMessage = "No se encontraron datos de Localidades"
+                                 filteredValue="#{provinciaLocalidadBean.filtroLocalidades}">
+                        <f:facet name="header">
+                            <p:outputPanel style="text-align: right;">
+                                <h:outputText value="Buscar en todos: "/>
+                                <p:inputText id="filtroGlobal" onkeyup="PF('_tblNuevaLocalidad').filter()"
+                                             style="width: 150px;" placeholder="palabra clave" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="CODIGO" filterBy="#{loc.idLocalidad}"
+                                  filterMatchMode="contains" style="width:50px;text-align: center" >
+                            <h:outputText value="#{loc.idLocalidad}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" filterBy="#{loc.nomLocalidad}"
+                                  filterMatchMode="contains"
+                                  style="width:150px;text-align: center">
+
+                            <h:outputText value="#{loc.nomLocalidad}" />
+                        </p:column>
+                        <p:column headerText="PROVINCIA" filterBy="#{loc.provincia.nomProvincia}"
+                                  filterMatchMode="exact" style="width:100px;text-align: center">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('_tblNuevaLocalidad').filter()">
+                                    <f:selectItem itemLabel="Ninguno" itemValue="#{null}"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems value="#{provinciaLocalidadBean.provinciaList}"/>
+                                </p:selectOneMenu>                                 
+                            </f:facet>
+
+                            <h:outputText value="#{loc.provincia.nomProvincia}" />
+                        </p:column>
+                        <p:column style="width:50px;text-align: center">        
+                            
+                            <p:commandButton oncomplete="PF('_dlgNuevoComprador').show();PF('_dlgNuevaLocalidad').hide();"
+                                             
+                                             icon="ui-icon-check"
+                                             title="Seleccionar Localidad"
+                                              update="#{p:component('txtNuevaLocalidad')},#{p:component('txtNuevaProvincia')}"
+                                              >
+
+                                <f:setPropertyActionListener target="#{compradorBean.comprador.localidad}" 
+                                                             value="#{loc}"/>
+
+                            </p:commandButton>  
+
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Cerrar" onclick="PF('_dlgNuevoComprador').show();
+                            PF('_dlgNuevaLocalidad').hide();" 
+                                     icon="ui-icon-closethick"/>
+                </h:form>           
+            </p:dialog>
+            <!--  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-->
+           
+        <!-- ============================================================================ -->                
+        <!-- =====================    UPDATE COMPRADOR    ================================= -->                        
+        <!-- ============================================================================ -->  
+
+        <p:dialog id="dlgEditarComprador" header="Información del Comprador" widgetVar="_dlgEditarComprador"
+                  resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+            <h:form id="frmEditarComprador">
+                <p:messages id="mensajeUpdate" autoUpdate="true"/>
+                <h:panelGrid  id="display" cellpadding="4" columns="2" style="margin: 0 auto;" styleClass="noBorders">
+
+                     <p:outputLabel id="lblEditarTipoDocumento" for="txtEditarTipoDocumento" value="Tipo de Documento: " />
+                    <p:column>
+                        <p:inputText  id="txtEditarTipoDocumento"  value="#{compradorBean.comprador.doctipo}" 
+                                      readonly="true" required="true" requiredMessage="Elija un tipo de Documento." 
+                                      validatorMessage="Elija un tipo de Documento.">
+                                <f:validateLength minimum="2" />
+                        </p:inputText>
+                        <p:commandButton value="tipo documento" 
+                                         oncomplete="PF('_dlgEditarTipoDocumento').show();"
+                                         update='frmEditarTipoDocumento'
+                                        />
+                    </p:column>
+                    <p:outputLabel for="txtEditarDocumento" value="Número de Documento: " />
+                    <p:inputText id="txtEditarDUI" value="#{compradorBean.comprador.docNro}" 
+                                 required="true" requiredMessage="Ingrese el Número de Documento"
+                                 validatorMessage="Doc Numero: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+                    
+
+                    <p:outputLabel for="txtEditarNombre" value="Nombre:" />
+                    <p:inputText id="txtEditarNombre" value="#{compradorBean.comprador.nomComprador}" 
+                                 required="true" requiredMessage="Ingrese el Nombre del Comprador"
+                                 validatorMessage="Nombre: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtEditarApellido" value="Apellido:" />
+                    <p:inputText id="txtEditarApellido" value="#{compradorBean.comprador.apellido}" 
+                                 required="true" requiredMessage="Ingrese el Apellido del Comprador"
+                                 validatorMessage="Apellido: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtEditarDomicilio" value="Domicilio:" />
+                    <p:inputText id="txtEditarDomicilio" value="#{compradorBean.comprador.direccion}" 
+                                 required="true" requiredMessage="Ingrese el domicilio del Comprador"
+                                 validatorMessage="Domicilio: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+                     <p:column>
+                        <p:outputLabel for="txtNuevoPiso" value="piso:" />
+                        <p:inputText id="txtNuevoPiso" value="#{compradorBean.comprador.piso}" />
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel for="txtNuevoDpto" value="Departamento:" />
+                        <p:inputText id="txtNuevoDpto" value="#{compradorBean.comprador.dpto}" />
+                    </p:column>
+
+                    <p:outputLabel for="txtEditarTelefono" value="Telefono:" />
+                    <p:inputText id="txtEditarTelefono" value="#{compradorBean.comprador.telefono}" 
+                                 validatorMessage="Telefono: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtEditarCelular" value="Celular:" />
+                    <p:inputText id="txtEditarCelular" value="#{compradorBean.comprador.celular}" 
+                                 validatorMessage="Celular: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtEditarEmail" value="Email:" />
+                    <p:inputText id="txtEditarEmail" value="#{compradorBean.comprador.email}" 
+                                 validatorMessage="Email: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="editarCompradorNacimiento" value="Fecha Nacimiento: " />
+                    <p:calendar id="editarCompradorNacimiento" value="#{compradorBean.comprador.fchNacimiento}" navigator="true" 
+                                mode="popup" yearRange="-100" pattern="MM/dd/yyyy HH:mm" showOn="button" showButtonPanel="true"/>
+
+                    <p:outputLabel id="lblEditarLocalidad" for="txtEditarLocalidad" value="Localidad: " />
+                    <p:column>
+                        <p:inputText  id="txtEditarLocalidad"  value="#{compradorBean.comprador.localidad.nomLocalidad}" 
+                                      readonly="true" required="true" requiredMessage="Elija una Localidad" 
+                                      validatorMessage="Elija una Localidad">
+                            <f:validateLength minimum="2" />
+                        </p:inputText>
+                        <p:commandButton value="Localidad" oncomplete="PF('_dlgEditarLocalidad').show();"
+                                         update='frmEditarLocalidad'/>
+                    </p:column>
+
+                    <p:outputLabel id="lblEditarProvincia" for="txtEditarProvincia" value="Provincia: " />
+                    <p:inputText  id="txtEditarProvincia"  value="#{compradorBean.comprador.localidad.provincia.nomProvincia}" 
+                                  readonly="true" required="true" requiredMessage="Elija una Provincia" 
+                                  validatorMessage="Elija una Provincia">
+                        <f:validateLength minimum="2" />
+                    </p:inputText>
+
+                    <p:commandButton value="Guardar" actionListener="#{compradorBean.update()}" 
+                                      oncomplete="PF('_dlgEditarCliente').hide()" icon="ui-icon-disk"/>
+                    <p:commandButton value="Cancelar" oncomplete="PF('_dlgEditarCliente').hide()" icon="ui-icon-closethick"/>
+                </h:panelGrid>
+            </h:form>       
+        </p:dialog>
+
+
+            <!--  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-->
+            <p:dialog id="dlgEditarLocalidad" widgetVar="_dlgEditarLocalidad" modal="true" resizable="false" 
+                      appendTo="@(body)" showEffect="explode" hideEffect="explode">
+                <h:form id="frmEditarLocalidad">
+
+                    <p:dataTable id="tblEditarLocalidad" widgetVar="_tblEditarLocalidad" style="width: 700px;" 
+                                 paginator ="true" paginatorPosition ="top" rows="10" var="loc" value="#{provinciaLocalidadBean.localidadList}" 
+                                 emptyMessage = "No se encontraron datos de Localidades" filteredValue="#{provinciaLocalidadBean.filtroLocalidades}">
+                        <f:facet name="header">
+                            <p:outputPanel style="text-align: right;">
+                                <h:outputText value="Buscar en todos: "/>
+                                <p:inputText id="filtroGlobal" onkeyup="PF('_tblEditarLocalidad').filter()"
+                                             style="width: 150px;" placeholder="palabra clave" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="CODIGO" filterBy="#{loc.idLocalidad}"
+                                  filterMatchMode="contains" style="width:50px;text-align: center" >
+                            <h:outputText value="#{loc.idLocalidad}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" filterBy="#{loc.nomLocalidad}"
+                                  filterMatchMode="contains"
+                                  style="width:150px;text-align: center">
+
+                            <h:outputText value="#{loc.nomLocalidad}" />
+                        </p:column>
+                        <p:column headerText="PROVINCIA" filterBy="#{loc.provincia.nomProvincia}"
+                                  filterMatchMode="exact" style="width:100px;text-align: center">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('_tblEditarLocalidad').filter()">
+                                    <f:selectItem itemLabel="Ninguno" itemValue="#{null}"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems value="#{provinciaLocalidadBean.provinciaList}"/>
+                                </p:selectOneMenu>                                 
+                            </f:facet>
+
+                            <h:outputText value="#{loc.provincia.nomProvincia}" />
+                        </p:column>
+                        <p:column style="width:50px;text-align: center">        
+                            <p:commandButton oncomplete="PF('_dlgEditarComprador').show();PF('_dlgEditarLocalidad').hide();"
+                                             icon="ui-icon-check"
+                                             title="Seleccionar Localidad"
+                                             update="#{p:component('txtEditarLocalidad')}, #{p:component('txtEditarProvincia')}" >
+
+                                <f:setPropertyActionListener target="#{compradorBean.comprador.localidad}" 
+                                                             value="#{loc}"/>
+
+                            </p:commandButton>  
+
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Cerrar" onclick="PF('_dlgEditarCliente').show();
+                            PF('_dlgEditarLocalidad').hide();" icon="ui-icon-closethick"/>
+                </h:form>           
+            </p:dialog>
+          
+        <!-- ============================================================================ -->                
+        <!-- =====================    ELIMINAR COMPRADOR    =============================== -->                        
+        <!-- ============================================================================ -->  
+
+            <p:dialog id="dlgEliminarComprador" header="Eliminar Comprador" widgetVar="_dlgEliminarComprador"
+                      resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                <h:form id="frmEliminarComprador">
+                    <h:outputText value="Esta por eliminar un comprador ¿Cotinuar? "/>
+                    <p:panelGrid  columns="2" style="margin: 0 auto;">
+                        <p:commandButton value="Aceptar" actionListener="#{compradorBean.delete()}" 
+                                      
+                                     oncomplete="PF('_dlgEliminarComprador').hide();" icon="ui-icon-trash"/>
+                        <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                     onclick="PF('_dlgEliminarComprador').hide();"/>
+                    </p:panelGrid>
+                </h:form>   
+            </p:dialog>
+       
+        <!--  ============================================================================================================-->
+
+   </ui:composition>     
+   
+</html>

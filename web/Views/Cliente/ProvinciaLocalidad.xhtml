@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+            xmlns:p="http://primefaces.org/ui"
+            xmlns:h="http://xmlns.jcp.org/jsf/html"
+            xmlns:f="http://xmlns.jcp.org/jsf/core">
+      
+
+    <body>
+        
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+            <ui:define name="content">
+                <h1>Datos de la Provincia</h1>
+                <p:growl id="growlProvincia" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+              
+                <h:form>
+                    <p:commandButton value="Nueva Provincia" 
+                                     actionListener="#{provinciaLocalidadBean.prepararNuevaProvincia()}" 
+                                     oncomplete="PF('_dlgNuevaProvincia').show();" 
+                                     icon="ui-icon-plusthick" title="Nueva Provincia"
+                                     update="dlgNuevaProvincia">
+                        <p:resetInput target="dlgNuevaProvincia"/>
+                    </p:commandButton>
+                </h:form>    
+
+                <h:form id="frmMostrarProvincia">
+
+                    <p:dataTable id="tblProvincia" paginator ="true" paginatorPosition ="top" 
+                                 rows="30" var="p" value="#{provinciaLocalidadBean.provinciaList}" 
+                                 emptyMessage = "No hay datos de Provincias">
+                        <f:facet name="header">Lista de Localidades</f:facet>
+                        
+                        <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                            <h:outputText value="#{p.idProvincia}" />
+                        </p:column>
+                        <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                            <h:outputText value="#{p.nomProvincia}" />
+                        </p:column>
+                        <p:column headerText="VER" style="width:300px;text-align: center">
+                            <h:outputText value="#{p.nomProvincia}" />
+                        </p:column>
+                        <p:column headerText="ACTUALIZADO" style="width:100px;text-align: left">
+                            <h:outputText value="#{p.lastUpdate}" />
+                        </p:column>
+                        <p:column headerText="USUARIO QUE ACTUALIZO" style="width:100px;text-align: center">
+                            <h:outputText value="#{p.userUpdate}" />
+                        </p:column>
+                        
+                        <p:column style="width:100px;text-align: center">
+                            <p:panelGrid  columns="2" styleClass="noBorders" style="margin: 0 auto;">
+                                <p:commandButton oncomplete="PF('_dlgEditarProvincia').show();" 
+                                                 icon="ui-icon-pencil"
+                                                 title="Modificar Provincia"
+                                                 update = ":frmEditarProvincia">
+                                    <f:setPropertyActionListener target="#{provinciaLocalidadBean.provincia}" 
+                                                                 value="#{p}"/>
+                                    
+                                </p:commandButton>    
+                                <p:commandButton oncomplete="PF('_dlgEliminarProvincia').show();"
+                                                 update="frmMostrarProvincia"
+                                                 icon="ui-icon-trash" title="Eliminar Provincia">
+                                    <f:setPropertyActionListener value="#{p}" target="#{provinciaLocalidadBean.provincia}" />
+                                                                 
+                                </p:commandButton>
+                            </p:panelGrid>    
+                        </p:column>
+                        
+                    </p:dataTable>
+                </h:form>   
+<!--  ============================================================================================================-->
+                   
+               
+            <p:dialog id="dlgNuevaProvincia" header="Información Provincia" widgetVar="_dlgNuevaProvincia"
+                      resizable="false" modal="true" showEffect="explode" hideEffect="explode" closable="false">
+                <h:form id="frmNuevaProvincia">
+                    
+                     <p:messages id="nuevoMensaje"    autoUpdate="false"/>
+                     <h:panelGrid  id="display" cellpadding="4" styleClass="noBorders" columns="2" style="margin: 0 auto;">
+                        
+                        <p:outputLabel for="txtCodigo" value="Codigo" />
+                        <p:inputText id="txtCodigo" required="true" requiredMessage="El código no puede estar vacío."
+                                     value="#{provinciaLocalidadBean.provincia.idProvincia}" 
+                                     validatorMessage="Nombre: Use un mínimo de dos caracteres.">
+                            <f:validateLength minimum="2"/>
+                        </p:inputText>    
+
+                        <p:outputLabel for="txtNombre" value="Nombre" />
+                        <p:inputText id="txtNombre" required="true" requiredMessage="El nombre no puede estar vacío." 
+                                    value="#{provinciaLocalidadBean.provincia.nomProvincia}" 
+                                    validatorMessage="Nombre: Use un mínimo de dos caracteres" >
+                            <f:validateLength minimum="2"/>
+                        </p:inputText>
+
+                        <p:outputLabel id="txtUserUpdate" for="txtUserUpdate" value="UserUpdate " />
+                        <p:inputText value="#{provinciaLocalidadBean.provincia.userUpdate}" />
+                        <p:column/>
+                        <p:column>
+                            <p:commandButton value="Guardar" actionListener="#{provinciaLocalidadBean.createProvincia()}" 
+                                             update=":frmNuevaProvincia, nuevoMensaje, growlProvincia"
+                                             validateClient="true" icon="ui-icon-disk"/>
+                            <p:commandButton type="reset" value="Cancelar" immediate="true" onclick="PF('_dlgNuevaProvincia').hide()" 
+                                             icon="ui-icon-closethick"/>
+                        </p:column>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+
+ <!--  ============================================================================================================-->
+
+            <p:dialog id="dlgEditarProvincia" header="Información Provincia" widgetVar="_dlgEditarProvincia"
+                      resizable="false" modal="true" showEffect="explode" hideEffect="explode" closable="false">
+
+
+                <!-- ESTE ES MOMENTANEO... NO SE DEBERIA MOSTRAR PORQUE EL USUARIO Y LA FECHA
+                        SE TIENEN QUE CARGAR SOLO, NO ES ALGO MODIFICABLE -->
+                <h:form id="frmEditarProvincia"> 
+                    <p:messages id="editarMensaje"    autoUpdate="false"/>
+                    <p:panelGrid  columns="2" styleClass="noBorders" style="margin: 0 auto;">
+                        <p:outputLabel for="txtCodigo" value="Codigo" />
+                        <p:inputText id="txtCodigo" required="true" requiredMessage="El código no puede estar vacío."
+                                     value="#{provinciaLocalidadBean.provincia.idProvincia}" 
+                                     validatorMessage="Nombre: Use un mínimo de dos caracteres.">
+                            <f:validateLength minimum="2"/>
+                        </p:inputText>    
+
+                       <p:outputLabel for="txtNombre" value="Nombre" />
+                        <p:inputText id="txtNombre" required="true" requiredMessage="El nombre no puede estar vacío." 
+                                    value="#{provinciaLocalidadBean.provincia.nomProvincia}" 
+                                    validatorMessage="Nombre: Use un mínimo de dos caracteres" >
+                            <f:validateLength minimum="2"/>
+                        </p:inputText>
+                        <p:column/>
+                        <p:column>
+
+                        <p:commandButton value="Guardar" actionListener="#{provinciaLocalidadBean.updateProvincia()}" 
+                                         update=":frmEditarProvincia, editarMensaje, growlProvincia" 
+                                         validateClient="true" icon="ui-icon-disk"/>
+                        <p:commandButton type="reset" value="Cancelar" onclick="PF('_dlgEditarProvincia').hide();" 
+                                         icon="ui-icon-closethick"/>
+                        </p:column>
+                    </p:panelGrid>
+                </h:form>       
+            </p:dialog>
+
+ <!--  ============================================================================================================-->
+                
+                <h:form id="frmEliminarProvincia">
+
+                    <p:dialog id="dlgEliminarProvincia" header="Eliminar Provincia" widgetVar="_dlgEliminarProvincia"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode" closable="false">
+                        <h:outputText value="Esta por eliminar una Provincia ¿Cotinuar? "/>
+                            <p:panelGrid  columns="2" style="margin: 0 auto;" styleClass="noBorders">
+                                <p:commandButton value="Aceptar" actionListener="#{provinciaLocalidadBean.deleteProvincia()}" 
+                                             update=":frmMostrarProvincia:tblProvincia, growlProvincia" 
+                                             oncomplete="PF('_dlgEliminarProvincia').hide();" icon="ui-icon-trash"/>
+                                <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                             onclick="PF('_dlgEliminarProvincia').hide();"/>
+                            </p:panelGrid>
+                    </p:dialog>
+                </h:form>   
+ <!--  ============================================================================================================-->
+
+
+
+
+
+
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

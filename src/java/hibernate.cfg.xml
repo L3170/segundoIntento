@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/tesis?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.format_sql">true</property>
+    <property name="hibernate.connection.username">root</property>
+    <mapping class="com.ar.facturacion.model.Permiso"/>
+    <mapping class="com.ar.facturacion.model.Modopago"/>
+    <mapping class="com.ar.facturacion.model.Cbtesasoc"/>
+    <mapping class="com.ar.facturacion.model.Responsabletipo"/>
+    <mapping class="com.ar.facturacion.model.Ptoventa"/>
+    <mapping class="com.ar.facturacion.model.Doctipo"/>
+    <mapping class="com.ar.facturacion.model.Pago"/>
+    <mapping class="com.ar.facturacion.model.Concepto"/>
+    <mapping class="com.ar.facturacion.model.Provincia"/>
+    <mapping class="com.ar.facturacion.model.Iva"/>
+    <mapping class="com.ar.facturacion.model.Detalle"/>
+    <mapping class="com.ar.facturacion.model.Rol"/>
+    <mapping class="com.ar.facturacion.model.Tipomoneda"/>
+    <mapping class="com.ar.facturacion.model.Producto"/>
+    <mapping class="com.ar.facturacion.model.Moncotiz"/>
+    <mapping class="com.ar.facturacion.model.Events"/>
+    <mapping class="com.ar.facturacion.model.Errors"/>
+    <mapping class="com.ar.facturacion.model.Comprador"/>
+    <mapping class="com.ar.facturacion.model.Categoria"/>
+    <mapping class="com.ar.facturacion.model.Fecaereq"/>
+    <mapping class="com.ar.facturacion.model.Ctetipo"/>
+    <mapping class="com.ar.facturacion.model.Localidad"/>
+    <mapping class="com.ar.facturacion.model.Tributos"/>
+    <mapping class="com.ar.facturacion.model.Opcional"/>
+    <mapping class="com.ar.facturacion.model.DetalleId"/>
+    <mapping class="com.ar.facturacion.model.Ivatipo"/>
+    <mapping class="com.ar.facturacion.model.Tipotributo"/>
+    <mapping class="com.ar.facturacion.model.Usuario"/>
+  </session-factory>
+</hibernate-configuration>

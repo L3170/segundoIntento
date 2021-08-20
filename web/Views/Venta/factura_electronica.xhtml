@@ -1,0 +1,299 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+              
+                <p:growl id="growlFactura" autoUpdate="false" severity="info, faltal" showSummary="true"  showDetail="true" life="3000"  />
+              <!-- ==============Boton para crear nueva Factura =============-->
+              
+              <h:form style=" width:1100px; margin: 0 auto; text-align: center;">
+                    <p:commandButton value="REALIZAR NUEVA VENTA" title="Realizar una nueva venta"
+                                     actionListener="#{facturaBean.prepararNuevaFactura()}" 
+                                     update="formFactura"
+                                     style=" width:1100px; margin: 0 auto; text-align: center; ">
+                        <p:resetInput  target="formFactura" />
+                        <!--  resetInput hace que los campos del dialog aparezcan en blanco... si bien se puede hace con el boton type= reset    -->
+                        <!-- En este caso si el formulario tiene un error de validación y se hace clic en el boton reset... no se vuelven a cero los valores del formulario -->              
+                    </p:commandButton>
+                </h:form>    
+                
+                <!-- ==================================================== --> 
+                
+                
+                <h:form id="formWebService">
+                    <h3>web Services de facturacion electronica</h3>
+                    <p:tabView dynamic="true" cache="true" effect="fold">
+                        <p:tab title="Facturación Electronica">
+                            <h:panelGrid columns="2" cellpadding="10">
+                            <p:outputLabel value="Web Service AFIP" style="font-weight: bold"/>
+                            <p:column/>
+                            <p:outputLabel for="wsaa" value="Archivo de configuración:"/>
+                            <p:inputText id="wsaa" size="12" value="#{}"/>
+                            <p:growl id="messages" showDetail="true" />
+ 
+<h:form enctype="multipart/form-data">        
+    <p:fileUpload value="#{fileUploadView.file}" mode="simple" skinSimple="true"/>
+    <br />RR
+    <p:commandButton value="Submit" ajax="false" action="#{fileUploadView.upload}" disabled="true" />
+</h:form>
+ 
+<br />
+                            
+                            <p:outputLabel for="wsaa" value="Autenticación y Autorización (WSAA):"/>
+                            <p:inputText id="wsaa" size="12" value="#{}"/>
+                            <p:outputLabel for="wsfe" value="Factura Electronica (WSFE):"/>
+                            <p:inputText id="wsfe" size="12" value="#{}"/>
+                            <p:commandButton  icon="ui-icon-circle-triangle-s" 
+                                                           title="Guardar" 
+                                                           actionListener="#{}"/>
+                            
+                            </h:panelGrid>
+                        </p:tab>
+                        
+                        
+                        <p:tab title="Godfather Part III">
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <p:graphicImage name="demo/images/godfather/godfather3.jpg" />
+                                <h:outputText value="After a break of more than 15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family.
+                                              Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate." />
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+
+                    
+                    
+                    
+                    
+                    <p:panel header="" style=" width:1100px; margin: 0 auto; text-align: center;">
+                        <p:layout id="capaDatosCliente" style="width: 100%; height: 150px;">
+                            <p:layoutUnit id="datosCliente" position="center" style="padding: 5px; text-align: justify;font-size: 14px;" size="300">
+                                <h:panelGrid id="gridBuscarDatosClientes" columns="5">
+                                    <p:outputLabel value="Cod. Cliente" style="font-weight: bold">
+                                        <p:inputText id="txtDuiCliente" size="12" disabled="#{!facturaBean.enable}" 
+                                                     value="#{facturaBean.duiCliente}"/>
+                                         <p:commandButton  icon="ui-icon-circle-triangle-s" 
+                                                           title="Buscar Cliente" 
+                                                           disabled="#{!facturaBean.enable}"
+                                                           actionListener="#{facturaBean.obtenerCliente()}"/>
+                                    </p:outputLabel>
+                                    
+                                    <p:commandButton  icon="ui-icon-contact" title="lista de Clientes" 
+                                                      oncomplete="PF('_dlgCliente').show();"
+                                                      update="dlgCliente"
+                                                      disabled="#{!facturaBean.enable}"/>
+                                    <p:commandButton  icon="ui-icon-plusthick" title="Nuevo Cliente" 
+                                                      oncomplete="PF('_dlgNuevoComprador').show();"
+                                                      update="dlgNuevoComprador"
+                                                      disabled="#{!facturaBean.enable}">
+                                        <f:setPropertyActionListener target="#{clienteBean.actualizarTabla}"
+                                                                    value="formFactura" />
+                                    </p:commandButton>
+                                    <p:outputLabel value="Fecha: " style="font-weight: bold"/>
+                                    <p:outputLabel value="fecha del sistema" style="font-weight: bold"/>
+                                </h:panelGrid>
+                                <p:separator/>
+                                <h:panelGrid id="gridDatosClientes" columns="4">
+                                    <p:outputLabel value="Razón Social: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblNombreCliente" value="#{facturaBean.factura.cliente.nomCliente}, #{facturaBean.factura.cliente.apellidoCliente}"/>
+                                    
+                                    <p:outputLabel value="Domicilio: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblDireccionCliente" value="#{facturaBean.factura.cliente.direccion}"/>
+                                    
+                                    <p:outputLabel value="Ubicación: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblLocalidadCliente" value="#{facturaBean.factura.cliente.localidad.provincia.nomProvincia}, #{facturaBean.factura.cliente.localidad.nomLocalidad}"/>
+                                    
+                                    <p:outputLabel value="Telefono: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblTelefonoCliente" value="#{facturaBean.factura.cliente.telefono}"/>
+                                    
+                                    <p:outputLabel value="DNI: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblDNICliente" value="#{facturaBean.factura.cliente.dui}"/>
+                                    
+                                    <p:outputLabel id="lblImpuesto" value="Condición de IVA: " style="font-weight: bold"/>
+                                    <p:outputLabel value="#{facturaBean.factura.cliente.impuesto.leyenda}"/>
+                                  
+                                </h:panelGrid>
+                            </p:layoutUnit>
+                            <p:layoutUnit id="datosFactura" position="east" style="padding: 5px; text-align: center;
+                                          font-size: 14px;" size="200">
+                                <h:panelGrid columns="1" style="font-size: 24px; font-weight: bold; margin-top: 30px; margin: 0 auto">
+                                    FACTURA
+                                    <p:outputLabel value="00001"/>
+                                </h:panelGrid>
+                            </p:layoutUnit>
+
+                        </p:layout>
+                        <p:separator/>
+                        <h:panelGrid columns="4">
+                            <p:outputLabel value="Producto " style="font-weight: bold"/>
+                            <p:inputText id="txtProducto" disabled="#{!facturaBean.enable}"
+                                         value="#{facturaBean.codProducto}"/>
+                            
+                            <p:commandButton icon="ui-icon-circle-triangle-s" 
+                                             title="codigo del Producto" 
+                                             disabled="#{!facturaBean.enable}"
+                                             actionListener="#{facturaBean.obtenerProducto()}"/>
+                             <p:commandButton icon="ui-icon-search" 
+                                              title="Buscar Productos" 
+                                              disabled="#{!facturaBean.enable}"
+                                              actionListener="#{facturaBean}"/>
+                        </h:panelGrid>
+                        <p:separator/>
+
+
+                            //NO SE SI NO ES facturaBean.factura.detalles VERIFICAR
+                        <p:dataTable id="tablaProducto" rows="30" var="d" value="#{facturaBean.detalles}" 
+                                     emptyMessage = "No hay productos asignados">
+
+                            <p:column headerText="CODIGO" style="width:50px;text-align: center">
+                                <h:outputText value="#{d.producto.idProducto}" />
+                            </p:column>
+
+                            <p:column headerText="NOMBRE" style="width:200px;text-align: center">
+                                <h:outputText value="#{d.producto.nomProducto}" />
+                            </p:column>
+
+                            <p:column headerText="MARCA" style="width:150px;text-align: center">
+                                <h:outputText value="#{d.producto.marca}" />
+                            </p:column>
+
+                            <p:column headerText="OFERTA" style="width:100px;text-align: center">
+                                <h:outputText value="#{d.producto.oferta}" />
+                            </p:column>
+
+                            <p:column headerText="PRECIO VENTA" style="width:100px;text-align: center">
+                                <h:outputText value="#{d.producto.precioVenta}" />
+                            </p:column>
+                            <p:column headerText="CANTIDAD" style="width:100px;text-align: center">
+                                <h:outputText value="#{d.cantidad}" />
+                            </p:column>
+                            <p:column headerText="SUBTOTAL" style="width:100px;text-align: center">
+                                <h:outputText value="" />
+                            </p:column>
+
+                            <p:column headerText="Eliminar" style="width:100px;text-align: center">
+                                <p:commandButton icon="ui-icon-trash" title="Eliminar Producto"/>
+                            </p:column>       
+
+                        </p:dataTable>
+                        <p:separator/>   
+                        
+        <p:layout id="footerFactura" style="width: 100%; height: 100px;">
+                <p:layoutUnit id="botonesFactura" position="center" style="padding: 5px; text-align: center;font-size: 14px;" size="250">
+                                
+                    <p:layout id="footerMiddleFactura" style="width: 100%; height: 100px;">
+                        <p:layoutUnit id="botones" position="center" style="padding: 5px; text-align: center;font-size: 14px;" size="250">
+                            
+                            <p:commandButton value="Registrar" style="width: 150px; height: 50px;" 
+                                                 disabled="#{!facturaBean.enable}"/>
+                                <p:commandButton value="Imprimir" style="width: 150px; height: 50px;" 
+                                                 disabled="#{!facturaBean.enable}"/>
+                                <p:commandButton value="Cancelar" style="width: 150px; height: 50px;" 
+                                                 disabled="#{!facturaBean.enable}"/>
+                        </p:layoutUnit>
+                        <p:layoutUnit id="pago" position="east" style="padding: 5px; text-align: center;
+                                        font-size: 14px;" size="250">
+                                
+                                <h:panelGrid columns="2" style="font-weight: bold; margin-top: 30px; margin: 0 auto">
+                                    <p:outputLabel value="paga con:"/> 
+                                    <p:column>
+                                        <h:panelGrid columns="2">
+                                            <p:inputText disabled="#{!facturaBean.enable}" style="width: 80px;"/>
+                                            <p:commandButton  icon="ui-icon-circle-triangle-e" title="Calcular" 
+                                                              update="#{p:component('lblVuelto')}"
+                                                              disabled="#{!facturaBean.enable}"/>
+                                     </h:panelGrid>
+                                     </p:column>
+                                    <p:outputLabel value="vuelto: "/>
+                                    <p:outputLabel id="lblVuelto" value="0000,00"/>
+                                </h:panelGrid>  
+                                 
+                               
+                            </p:layoutUnit>
+                        
+                    </p:layout>
+                                
+
+                </p:layoutUnit>
+                <p:layoutUnit id="total" position="east" style="padding: 5px; text-align: center;
+                                        font-size: 14px;" size="250">
+                                 <h:panelGrid columns="2" style="font-size: 24px; font-weight: bold; margin-top: 30px; margin: 0 auto">
+                                    TOTAL:
+                                    <p:outputLabel value="9999,99"/>
+                                </h:panelGrid>
+                                
+                               
+                </p:layoutUnit>         
+                                
+                           
+            
+        </p:layout>        
+         
+                    </p:panel>
+                </h:form>
+<!--  =======================    DIALOGO DE CLIENTE    ===============================================-->
+
+<p:dialog id="dlgCliente" widgetVar="_dlgCliente" modal="true" 
+          resizable="false" showEffect="explode" hideEffect="explode">
+    <h:form id="frmCliente" >
+
+        <p:dataTable id="tablaClientes" style="width: 700px;" 
+                     paginator ="true" paginatorPosition ="top" 
+                     rows="10" var="c" value="#{clienteBean.clienteList}" 
+                     emptyMessage = "No hay datos de Clientes">
+            <f:facet name="header">Lista de Clientes</f:facet>
+
+            <p:column headerText="DUI">
+                <h:outputText value="#{c.dui}" />
+            </p:column>
+            <p:column headerText="NOMBRES">
+                <h:outputText value="#{c.nomCliente}" />
+            </p:column>
+            <p:column headerText="APELLIDOS">
+                <h:outputText value="#{c.apellidoCliente}" />
+            </p:column>
+            <p:column headerText="LOCALIDAD">
+                <h:outputText value="#{c.localidad.nomLocalidad}" />
+            </p:column>
+            <p:column style="width:100px;text-align: center">        
+                <p:commandButton oncomplete="PF('_dlgCliente').hide();"
+                                 icon="ui-icon-check"
+                                 title="Seleccionar Cliente"
+                                 update = "#{p:component('formFactura')}">
+
+                    <f:setPropertyActionListener target="#{facturaBean.factura.cliente}" value="#{c}"/>
+                </p:commandButton>  
+            </p:column>
+        </p:dataTable>
+        <p:commandButton value="Cerrar" onclick="PF('_dlgCliente').hide();" 
+                         icon="ui-icon-closethick"/>
+    </h:form>                         
+</p:dialog>
+
+
+                <!--  ============================================================================================================-->
+
+ <!--  ============================================================================================================-->
+ 
+         <ui:insert name="dialogs" >
+            <ui:include src="../Cliente/dialogComprador.xhtml"/>
+             
+             
+         </ui:insert>
+ <!--  ============================================================================================================-->
+                
+                
+                
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

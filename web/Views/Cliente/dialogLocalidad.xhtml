@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition>
+
+        <!-- ============================================================================ -->                
+        <!-- =====================    Nueva Localidad   ================================== -->                        
+        <!-- ============================================================================ -->  
+
+        <p:dialog id="dlgNuevaLocalidad" header="Nueva Localidad" widgetVar="_dlgNuevaLocalidad"
+                  resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+            <h:form id="formNuevaLocalidad">
+                <p:messages id="mensaje" autoUpdate="true"/>
+                <h:panelGrid  id="display" cellpadding="4" columns="2" style="margin: auto;">
+
+                    <p:outputLabel for="txtIdLocalidad" value="Codigo: " />
+                    <p:inputText id="txtIdLocalidad" value="#{provinciaLocalidadBean.localidad.idLocalidad}"
+                                 required="true" requiredMessage="Ingrese el código de la Localidad"
+                                 validatorMessage = "Código: Use un mínimo de 3 dígitos">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+
+                    <p:outputLabel for="txtNuevoNombre" value="Nombre: "/>
+                    <p:inputText id="txtNuevoNombre" value="#{provinciaLocalidadBean.localidad.nomLocalidad}"
+                                 required="true" requiredMessage="Nombre: Ingrese el Nombre de la Localidad"
+                                 validatorMessage="Nombre: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                    <p:outputLabel for="somProvincia"  value="Provincia: "/>
+                   <p:selectOneMenu id="somProvincia" value="#{provinciaLocalidadBean.localidad.provincia}" 
+                                    converter="selectOneMenuConverter" required="true"
+                                    requiredMessage="Provincia: Seleccione una Provincia."
+                                    >
+                        <f:selectItem itemValue="" itemLabel="Seleccione uno" />
+                        <f:selectItems value="#{provinciaLocalidadBean.provinciaList}" var="prov" itemValue="#{prov}" itemLabel="#{prov.nomProvincia}" />
+                    </p:selectOneMenu>
+
+                    <p:commandButton value="Guardar" actionListener="#{provinciaLocalidadBean.createLocalidad()}" 
+                                     icon="ui-icon-disk" validateClient="true" update="mensaje"
+                                     />
+                    <p:commandButton value="Cancelar" oncomplete="PF('_dlgNuevaLocalidad').hide()" 
+                                     icon="ui-icon-closethick"/>
+                </h:panelGrid>
+            </h:form>    
+        </p:dialog>   
+        <!--Dialog para definir Provincias de las Localidades-->
+        <!--  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-->
+
+        <p:dialog id="dlgProvincia" widgetVar="dlgProvincia" modal="true" resizable="false" 
+                  showEffect="explode" hideEffect="explode">
+            <h:form id="frmProvinciaParaLocalidad">
+                <p:dataTable id="tablaProvincia" style="width: 700px;" 
+                             paginator ="true" paginatorPosition ="top" 
+                             rows="10" var="p" value="#{provinciaLocalidadBean.provinciaList}" 
+                             emptyMessage = "No hay datos de Provincias">
+                    <f:facet name="header">Lista de Provincias</f:facet>
+                    <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                        <h:outputText value="#{p.idProvincia}" />
+                    </p:column>
+                    <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                        <h:outputText value="#{p.nomProvincia}" />
+                    </p:column>
+                    <p:column style="width:100px;text-align: center">        
+                        <p:commandButton oncomplete="PF('_dlgNuevaLocalidad').show();PF('dlgProvincia').hide();"
+                                         icon="ui-icon-check"
+                                         title="Seleccionar Provincia"
+                                         update = ":dlgNuevaLocalidad">
+
+                            <f:setPropertyActionListener target="#{provinciaLocalidadBean.localidad.provincia}" 
+                                                         value="#{p}"/>
+
+                        </p:commandButton>  
+
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="Cerrar" onclick="PF('dlgProvincia').hide();" 
+                                 icon="ui-icon-closethick"/>
+            </h:form>                  
+        </p:dialog>
+
+
+        <!-- ============================================================================ -->                
+        <!-- =====================    UPDATE LOCALIDAD  ================================= -->                        
+        <!-- ============================================================================ -->  
+
+
+        <p:dialog id="dlgEditarLocalidad" header="Información Localidad" widgetVar="_dlgEditarLocalidad"
+                  resizable="false" modal="true" showEffect="explode" hideEffect="explode" >
+            <h:form id="formEditarLocalidad">
+                <p:messages id="mensaje" autoUpdate="true"/>
+                <h:panelGrid  id="display" cellpadding="4" columns="2" style="margin: auto;" styleClass="noBorders">
+
+                    
+                    <p:outputLabel for="txtModificarIdLocalidad" value="Codigo: " />
+                    <p:inputText id="txtModificarIdLocalidad" value="#{provinciaLocalidadBean.localidad.idLocalidad}"
+                                 required="true" requiredMessage="Ingrese el código de la Localidad"
+                                 validatorMessage = "Código: Use un mínimo de 3 dígitos">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                     <p:outputLabel for="txtEditarNombre" value="Nombre"/>
+                    <p:inputText id="txtEditarNombre" value="#{provinciaLocalidadBean.localidad.nomLocalidad}"
+                                 required="true" requiredMessage="Ingrese el Nombre de la Localidad"
+                                 validatorMessage="Nombre: Use un mínimo de 3 caracteres">
+                        <f:validateLength minimum="3"/>
+                        <p:clientValidator/>
+                    </p:inputText>
+
+                   <p:outputLabel id="lblEditarLocProvincia" for="txtEditarLocProvincia" 
+                                   value="Provincia: "/>
+                    <p:column>
+                        <p:inputText id="txtEditarLocProvincia" value="#{provinciaLocalidadBean.localidad.provincia.nomProvincia}"
+                                     readonly="true" required="true" requiredMessage="Elija una Provincia."
+                                     validatorMessage="Elija una Provincia.">
+                            <f:validateLength minimum="2" />
+                        </p:inputText>
+                        <p:commandButton value="Provincia" oncomplete="PF('_dlgEditarProvincia').show();"
+                                     update='dlgProvincia'/>
+                    </p:column>    
+
+
+
+                    <p:commandButton value="Guardar" actionListener="#{provinciaLocalidadBean.updateLocalidad()}" 
+                                      icon="ui-icon-disk"
+                                     validateClient="true" update="mensaje"
+                                      />
+                    <p:commandButton value="Cancelar" onclick="PF('_dlgEditarLocalidad').hide();" 
+                                     icon="ui-icon-closethick"/>
+                </h:panelGrid>
+            </h:form>
+
+        </p:dialog>
+
+        <!--  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-->
+
+
+        <p:dialog id="dlgEditarProvincia" widgetVar="_dlgEditarProvincia" 
+                  modal="true" resizable="false" 
+                  showEffect="explode" hideEffect="explode">
+            <h:form id="formEditarProvinciaDeLocalidad">
+                <p:dataTable id="tablaEditarProvincia" style="width: 700px;" 
+                             paginator ="true" paginatorPosition ="top" 
+                             rows="10" var="prov" value="#{provinciaLocalidadBean.provinciaList}" 
+                             emptyMessage = "No hay datos de Provincias">
+                    <f:facet name="header">Lista de Provincias</f:facet>
+                    <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                        <h:outputText value="#{prov.idProvincia}" />
+                    </p:column>
+                    <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                        <h:outputText value="#{prov.nomProvincia}" />
+                    </p:column>
+                    <p:column style="width:100px;text-align: center">        
+                        <p:commandButton oncomplete="PF('_dlgEditarLocalidad').show();PF('_dlgEditarProvincia').hide();"
+                                         icon="ui-icon-check"
+                                         title="Seleccionar Provincia"
+                                         update = "formEditarLocalidad:txtEditarLocProvincia">
+                                           
+                            <f:setPropertyActionListener target="#{provinciaLocalidadBean.localidad.provincia}" 
+                                                         value="#{prov}"/>
+
+                        </p:commandButton>  
+
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="Cerrar" onclick="PF('dlgEditarProvincia').hide();" 
+                                 icon="ui-icon-closethick"/>
+            </h:form> 
+        </p:dialog>
+
+
+
+        <!--  ============================================================================================================-->
+
+        <p:dialog id="dlgEliminarLocalidad" header="Eliminar Localidad" widgetVar="_dlgEliminarLocalidad"
+                  resizable="false" modal="true" showEffect="explode" hideEffect="explode" styleClass="noBorders">
+            <h:form id="formEliminarLocalidad">
+
+
+                <h:outputText value="Esta por eliminar la localidad #{provinciaLocalidadBean.localidad.nomLocalidad}" />
+                <h:outputText value="  ¿Desea Cotinuar? "/>              
+                <p:panelGrid  columns="2" style="margin: 0 auto;">
+                    <p:commandButton value="Aceptar"  icon="ui-icon-trash"
+                                     actionListener="#{provinciaLocalidadBean.deleteLocalidad()}" 
+                                     />
+                    <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                     onclick="PF('_dlgEliminarLocalidad').hide();"/>
+                </p:panelGrid>
+
+            </h:form>  
+        </p:dialog>
+        <!--  ============================================================================================================-->
+
+
+
+    </ui:composition>     
+
+</html>

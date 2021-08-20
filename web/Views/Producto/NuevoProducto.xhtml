@@ -1,0 +1,459 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition >
+            
+            <p:dialog id="dlgNuevoProducto" header="Nuevo Producto" widgetVar="_dlgNuevoProducto"
+                  resizable="false" modal="true" showEffect="explode" hideEffect="explode" 
+                  positionType="fixed"
+                  width="65%" height="500px" >
+                
+                
+                <h:form id="frmNuevoProducto">
+                    <p:messages id="mensaje" autoUpdate="false"/>
+
+                <p:wizard  style="width:800px;height:auto;">
+                    <p:tab id="tabProducto" title="Producto">
+                        <p:panel header="Datos del Producto">
+                            <p:panelGrid  id="display"  columns="2" styleClass="noBorders" style="margin: 0 auto;">
+                            
+                               
+                                <p:outputLabel for="txtNombre" value="Nombre: " />
+                                <p:inputText  id="txtNombre"  value="#{productoBean.producto.nomProducto}"
+                                                  required="true" requiredMessage="Nombre: Ingrese un Nombre para el producto." 
+                                                  validatorMessage="Nombre: debe ser mas de dos letras.">
+                                    <f:validateLength minimum="2" />
+                                </p:inputText>    
+
+                                <h:outputLabel value="Marca:" />
+                                <p:inputText value="#{productoBean.producto.marca}" required="true"
+                                         requiredMessage="Marca: Ingrese una Marca."
+                                         validatorMessage="Marca: debe ser mas de dos letras.">
+                                    <f:validateLength minimum="2"/>
+                                </p:inputText>    
+                            
+                                <p:outputLabel for="txtDescripcionProducto" value="Descripcion: " />
+                                <p:inputTextarea id="txtDescripcionProducto" counter="descripcion" maxlength="100" 
+                                                     counterTemplate="{0} characters remaining." autoResize="false" 
+                                                     value = "#{productoBean.producto.descripcion}"
+                                                     required="true" requiredMessage="La descripción no puede estar vacía"/>
+                                <p:column/>
+                                <h:outputText id="descripcion" />
+
+                                <h:outputLabel value="Cantidad por Unidad:" />
+                                <p:inputText value="#{productoBean.producto.cantidadXunidad}" />
+
+
+                                <h:outputLabel value="Stock:" />
+                                <p:inputText value="#{productoBean.producto.unidadEnStock}" />
+
+                                <p:outputLabel for="fchVto" value="Fecha Vto: " />
+                                <p:calendar id="fchVto" value="#{productoBean.producto.fechaVto}" 
+                                            navigator="true" mode="popup" pattern="MMddyyyy"
+                                            showOn="button" showButtonPanel="true"/>
+
+                                <h:outputLabel value="Precio de Compra:" />
+                                <p:inputText value="#{productoBean.producto.precioCompra}" />
+    
+                                <h:outputLabel value="Precio de Venta:" />
+                                <p:inputText value="#{productoBean.producto.precioVenta}" />
+
+                                <h:outputLabel value="Oferta:" />
+                                <p:inputText value="#{productoBean.producto.oferta}" />
+
+                                <p:outputLabel for="txtNuevaCategoria" value="Categoria: " />
+                            
+                                <p:inputText  id="txtNuevaCategoria"  value="#{productoBean.producto.categoria.nomCategoria}" 
+                                      readonly="true" required="true" requiredMessage="Elija una Categoria" 
+                                      validatorMessage="Elija una Categoria">
+                                    <f:validateLength minimum="2" />
+                                </p:inputText>
+                                <p:column/>
+                                <p:commandButton value="Categoria" 
+                                    oncomplete="PF('_dlgCategoria').show();"
+                                    update='frmCategoria'/>
+                        
+                              
+                                
+                              <!--  <h:outputText value="Saltar al final: " />
+                                <h:selectBooleanCheckbox value="rolBean.skip}" />
+
+                              -->
+                               
+                            </p:panelGrid>
+                        </p:panel>
+                    </p:tab>
+                    <!--  ============================================================================================================-->
+
+                    <p:tab id="tabIva" title="IVA">
+                        <p:panel header="Iva Asociado" >
+                            <p:fieldset>
+                                <p:outputLabel  value="Asignación de IVA " />
+                                <p:commandButton value="Ivas" oncomplete="PF('_dlgIvas').show();" update='frmIvas'/>
+                            </p:fieldset>
+                                 <ui:repeat var="iva" value="#{productoBean.ivaList}" >
+                                    <p:panelGrid  id="BaseImponible"  columns="6" styleClass="noBorders" style="margin: 0 auto;">
+                                    
+                                            <p:outputLabel  value="tipo Iva: " style=" width: 40%; font-weight: bold;"/>
+                                            <p:outputLabel  value="#{iva.ivatipo.descripcion}" style=" width: 40%;"/>
+                                            <p:outputLabel  value="Base imponible: " style="width: 40%; font-weight: bold;" />
+                                            <p:column>
+                                                <p:inputText value="#{iva.baseImp}" 
+                                                             required="true" requiredMessage="Campo Obligatorio."
+                                                             converterMessage="Campo Numérico."
+                                                             style="width: 60%;" >
+                                                    <f:convertNumber maxFractionDigits="2" maxIntegerDigits="3" />
+
+                                                </p:inputText>
+                                                <p:commandButton icon="ui-icon-circle-arrow-e"  update='importeIva'>
+                                                    <f:setPropertyActionListener target="#{iva.importe}" value="#{(productoBean.producto.precioVenta/100) * iva.baseImp}" />
+                                                </p:commandButton>
+                                            </p:column>
+                                           <p:outputLabel  value="Importe Iva: " style="width: 40%; font-weight: bold;" />
+                                           <p:inputText id="importeIva" value="#{iva.importe}" 
+                                                         required="true" requiredMessage="Campo Obligatorio."
+                                                         converterMessage="Campo Obligatorio."  style="width: 60%;" >
+                                                
+                                            </p:inputText>
+                                            
+                                    </p:panelGrid>
+                                </ui:repeat>
+                              
+                        </p:panel>
+                    </p:tab>
+                    <!--  ============================================================================================================-->
+                     <p:tab id="tabTributos" title="Tributos">
+                         <p:panel header="Tributos Asociado" style="width: 1000px;">
+                           <p:fieldset>
+                                <p:outputLabel  value="Asignación de Tributos" />
+                                <p:commandButton value="Tributos" oncomplete="PF('_dlgTributos').show();" update='frmTributos'/>
+                            </p:fieldset>
+                             <ui:repeat var="tributo" value="#{productoBean.tributoList}" >
+                                    <p:panelGrid  columns="6" styleClass="noBorders" style="margin: 0 auto;">
+                                    
+                                            <p:outputLabel  value="tipo Tributo: " style=" width: 40%; font-weight: bold;"/>
+                                            <p:outputLabel  value="#{tributo.tipotributo.descripcion}" style=" width: 40%;"/>
+                                            <p:outputLabel  value="Base imponible: " style="width: 40%; font-weight: bold;" />
+                                            <p:column>
+                                                <p:inputText value="#{tributo.baseImp}" 
+                                                             required="true" requiredMessage="Campo Obligatorio."
+                                                             converterMessage="Campo Numérico."
+                                                             style="width: 60%;" >
+                                                    <f:convertNumber maxFractionDigits="2" maxIntegerDigits="3" />
+
+                                                </p:inputText>
+                                                <p:commandButton icon="ui-icon-circle-arrow-e"  update='importeTributo'>
+                                                    <f:setPropertyActionListener target="#{tributo.importe}" value="#{(productoBean.producto.precioVenta/100) * tributo.baseImp}" />
+                                                </p:commandButton>
+                                            </p:column>
+                                           <p:outputLabel  value="Importe Tributo: " style="width: 40%; font-weight: bold;" />
+                                           <p:inputText id="importeTributo" value="#{tributo.importe}" 
+                                                         required="true" requiredMessage="Campo Obligatorio."
+                                                         converterMessage="Campo Obligatorio."  style="width: 60%;" >
+                                                
+                                            </p:inputText>
+                                            
+                                    </p:panelGrid>
+                                </ui:repeat>
+                              
+                        </p:panel>
+                    </p:tab>
+                    <!--  ============================================================================================================-->
+
+                    <p:tab id="confirmar" title="Confirmar">
+                        <p:panel header="#{productoBean.producto.nomProducto}">
+
+                            <p:panelGrid columns="2" styleClass="noBorders">
+
+                                <p:outputLabel for="txtCNombre" value="Nombre: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCNombre" value="#{productoBean.producto.nomProducto}" />
+
+                                <p:outputLabel for="txtMarca" value="Marca: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtMarca" value="#{productoBean.producto.marca}" />
+
+                                <p:outputLabel for="txtDescripcion" value="Descripción: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtDescripcion" value="#{productoBean.producto.descripcion}" />
+
+                                <p:outputLabel for="txtCategoria" value="Categoria: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCategoria" value="#{productoBean.producto.categoria.nomCategoria}" />
+
+                                <p:outputLabel for="txtCantidadXUnidad" value="Cantidad x Unidad: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtCantidadXUnidad" value="#{productoBean.producto.cantidadXunidad}" />
+
+                                <p:outputLabel for="txtStock" value="Stock:" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtStock" value="#{productoBean.producto.unidadEnStock}" />
+
+                                <p:outputLabel for="txtVencimiento" value="Vencimiento: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtVencimiento" value="#{productoBean.producto.fechaVto}" />
+
+                                <p:outputLabel for="txtPrecioCompra" value="Precio Compra :" style="font-weight: bold;"/>
+                                <p:outputLabel id="txtPrecioCompra" value="#{productoBean.producto.precioCompra}" />
+
+                                <p:outputLabel for="txtPrecioVenta" value="Precio Venta: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtPrecioVenta" value="#{productoBean.producto.precioVenta}" />
+                                
+                                <p:outputLabel for="txtOferta" value="Oferta: " style="font-weight: bold;"/>
+                                <p:outputLabel id="txtOferta" value="#{productoBean.producto.oferta}" />
+                            </p:panelGrid>
+                                <p:fieldset legend="IVA">
+                                    
+                                    <ui:repeat var="iva" value="#{productoBean.ivaList}" >
+                                    <p:panelGrid  id="BaseImponible"  columns="6" styleClass="noBorders" style="margin: 0 auto;">
+                                    
+                                            <p:outputLabel  value="tipo Iva: " style="font-weight: bold;"/>
+                                            <p:outputLabel  value="#{iva.ivatipo.descripcion}" />
+                                            <p:outputLabel  value="Base imponible: " style="font-weight: bold;"/>
+                                            <p:outputLabel value="#{iva.baseImp}" />
+                                            <p:outputLabel  value="Importe Iva: " style="font-weight: bold;"/>
+                                            <p:outputLabel value="#{iva.importe}" />
+                                            
+                                            
+                                    </p:panelGrid>
+                                    </ui:repeat>
+                                    <p:outputLabel  value="IVA Total: " style="font-weight: bold;"/>
+                                    <p:outputLabel value="#{productoBean.totalIVA}" />
+                                            
+                                   
+
+                                </p:fieldset>
+
+                                   <p:fieldset legend="Tributos">
+                                    
+                                       <ui:repeat var="tributo" value="#{productoBean.tributoList}" >
+                                    <p:panelGrid    columns="6" styleClass="noBorders" style="margin: 0 auto;">
+                                    
+                                            <p:outputLabel  value="tipo Tributo: " style="font-weight: bold;"/>
+                                            <p:outputLabel  value="#{tributo.tipotributo.descripcion}" />
+                                            <p:outputLabel  value="Base imponible: " style="font-weight: bold;"/>
+                                            <p:outputLabel value="#{tributo.baseImp}" />
+                                            <p:outputLabel  value="Importe Tributo: " style="font-weight: bold;"/>
+                                            <p:outputLabel value="#{tributo.importe}" />
+                                            
+                                            
+                                    </p:panelGrid>
+                                    </ui:repeat>
+                                    <p:outputLabel  value="Tributo Total: " style="font-weight: bold;"/>
+                                    <p:outputLabel value="#{productoBean.totalTributos}" />
+                                            
+                                   
+
+                                </p:fieldset>
+
+                                <div style="margin: 0 auto;   float: right;">
+                                <p:commandButton value="Guardar" action="#{rolBean.createRol()}" update="" process="@this" />
+                                </div>
+                            
+
+                        </p:panel>
+                    </p:tab>
+                    
+                </p:wizard>
+
+            </h:form>  
+                 
+        </p:dialog>   
+              
+
+        <!-- ============================================================================ -->                
+        <!-- =====================                     ================================= -->                        
+        <!-- ============================================================================ -->  
+
+                      <!--Dialog para definir Categoria de los productos-->
+ <!--  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-->
+                       
+                <p:dialog id="dlgCategoria" widgetVar="_dlgCategoria" modal="true"
+                          resizable="false" showEffect="explode" hideEffect="explode">
+                    <h:form id="frmCategoria">
+                        <p:dataTable id="tablaCategoria" style="width: 800px;" 
+                                     paginator ="true" paginatorPosition ="top" rows="10" var="c" 
+                                     value="#{categoriaBean.categoriaList}" emptyMessage = "No hay datos de Categorias">
+
+                            <f:facet name="header">Lista de Categoria</f:facet>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{c.codCategoria}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{c.nomCategoria}" />
+                            </p:column>
+                            <p:column headerText="DESCRIPCION" style="width:200px;text-align: center">
+                                <h:outputText value="#{c.descripcion}" />
+                            </p:column>
+                            <p:column style="width:100px;text-align: center">        
+                                <p:commandButton actionListener="#{productoBean.seleccionDeCategoria()}"
+                                                 icon="ui-icon-check"
+                                                 title="Seleccionar Categoria"
+                                                 update = ":frmNuevoProducto, dlgNuevoProducto">
+
+                                    <f:setPropertyActionListener target="#{productoBean.producto.categoria}" 
+                                                                 value="#{c}"/>
+
+                                </p:commandButton>  
+
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" onclick="PF('_dlgCategoria').hide();" 
+                                         icon="ui-icon-closethick"/>
+                    </h:form>                     
+                </p:dialog>
+       
+          <!--  ============================================================================================================-->
+                   
+      <h:form id="formEditarProducto">
+                    <p:dialog id="dlgEditarProducto" header="Información Producto" widgetVar="dlgEditarProducto"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                       
+                        <p:panelGrid  columns="2" style="margin: 0 auto;">
+                           
+                            <h:outputText value="Nombre:" />
+                            <p:inputText value="#{productoBean.producto.nomProducto}" />
+                           
+
+                            <h:outputText value="Marca:" />
+                            <p:inputText value="#{productoBean.producto.marca}" />
+                           
+
+                            <h:outputText value="Cantidad por Unidad:" />
+                            <p:inputText value="#{productoBean.producto.cantidadXunidad}" />
+                           
+
+                            <h:outputText value="Unidad en Stock:" />
+                            <p:inputText value="#{productoBean.producto.unidadEnStock}" />
+                           
+
+                            <h:outputText value="Vencimiento:" />
+                            <p:inputText value="#{productoBean.producto.fechaVto}" />
+                           
+
+                            <h:outputText value="Precio de Compra:" />
+                            <p:inputText value="#{productoBean.producto.precioCompra}" />
+                           
+
+                            <h:outputText value="Precio de Venta:" />
+                            <p:inputText value="#{productoBean.producto.precioVenta}" />
+                            
+                            <p:outputLabel value="Categoria: #{productoBean.producto.categoria.nomCategoria}"/>
+                            <p:commandButton value="Categoria" oncomplete="PF('dlgEditarCategoria').show();"
+                                             update=':formEditarProducto:dlgEditarCategoria'/>
+                           
+
+                            
+                            
+                            <p:commandButton value="Guardar" actionListener="#{productoBean.updateProducto()}" 
+                                            
+                                             oncomplete="PF('dlgEditarProducto').hide()" icon="ui-icon-disk"/>
+                            <p:commandButton value="Cancelar" onclick="PF('dlgEditarProducto').hide();" 
+                                             icon="ui-icon-closethick"/>
+                        </p:panelGrid>
+                    </p:dialog>
+<!--  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-->
+                       
+                    <p:dialog id="dlgEditarCategoria" widgetVar="dlgEditarCategoria" 
+                              modal="true" resizable="false" 
+                              showEffect="explode" hideEffect="explode">
+                        <p:dataTable id="tablaEditarCategoria" style="width: 800px;" 
+                                    paginator ="true" paginatorPosition ="top" rows="10" var="c" 
+                                    value="#{categoriaBean.categoriaList}" emptyMessage = "No hay datos de Provincias">
+                            
+                            <f:facet name="header">Lista de Categorias</f:facet>
+                            <p:column headerText="CODIGO" style="width:100px;text-align: center">
+                                <h:outputText value="#{c.codCategoria}" />
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="width:300px;text-align: center">
+                                <h:outputText value="#{c.nomCategoria}" />
+                            </p:column>
+                            <p:column headerText="DESCRIPCION" style="width:200px;text-align: center">
+                                <h:outputText value="#{c.descripcion}" />
+                            </p:column>
+                            <p:column style="width:100px;text-align: center">        
+                                <p:commandButton oncomplete="PF('dlgEditarProducto').show();PF('dlgEditarCategoria').hide();"
+                                                icon="ui-icon-check"
+                                                title="Seleccionar Categoria"
+                                                update = ":formEditarProducto:dlgEditarProducto">
+                                    
+                                    <f:setPropertyActionListener target="#{productoBean.producto.categoria}" 
+                                                                 value="#{c}"/>
+                                    
+                                </p:commandButton>  
+                                            
+                            </p:column>
+                            </p:dataTable>
+                            <p:commandButton value="Cerrar" onclick="PF('dlgEditarCategoria').hide();" 
+                                             icon="ui-icon-closethick"/>
+                                             
+                        </p:dialog>
+         
+
+                </h:form>   
+ <!--  ============================================================================================================-->
+
+                <h:form id="formEliminarProducto">
+
+                    <p:dialog id="dlgEliminarProducto" header="Eliminar Producto" widgetVar="dialogEliminarProducto"
+                              resizable="false" modal="true" showEffect="explode" hideEffect="explode">
+                        <h:outputText value="Esta por eliminar un Producto ¿Cotinuar? "/>
+                            <p:panelGrid  columns="2" style="margin: 0 auto;">
+                                <p:commandButton value="Aceptar" actionListener="#{productoBean.deleteProducto()}" 
+                                              
+                                             oncomplete="PF('dialogEliminarProducto').hide();" icon="ui-icon-trash"/>
+                                <p:commandButton value="Cancelar" icon = "ui-icon-closethick" 
+                                             onclick="PF('dialogEliminarProducto').hide();"/>
+                            </p:panelGrid>
+                    </p:dialog>
+                </h:form>   
+ <!--  ============================================================================================================-->
+
+            <p:dialog id="dlgIvas" widgetVar="_dlgIvas" modal="true"
+                      resizable="false" showEffect="explode" hideEffect="explode">
+                <h:form id="frmIvas">
+                    <p:dataTable id="tblAgregarIvas" style="width: 800px;"
+                                 paginator ="true" paginatorPosition ="top" rows="10" var="i" 
+                                 value="#{afipBean.ivaTipoList}" selection="#{productoBean.ivaTipoList}"
+                                 emptyMessage = "No hay datos de tipos de IVA" rowKey="#{i.idIva}">
+
+                                <f:facet name="header">Lista de Tipos de Iva</f:facet>
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                <p:column headerText="CODIGO" style="width:50px;text-align: center">
+                                    <h:outputText value="#{i.idIva}" />
+                                </p:column>
+                                <p:column headerText="DESCRIPCION" style="width:50px;text-align: center">
+                                    <h:outputText value="#{i.descripcion}" />
+                                </p:column>
+                                
+                        </p:dataTable>
+                    <p:commandButton value="Aceptar" onclick="PF('_dlgIvas').hide();" actionListener="#{productoBean.crearIvas()}"
+                                     icon="ui-icon-closethick" update="frmNuevoProducto"/>
+                    </h:form>                     
+            </p:dialog>
+       
+            <p:dialog id="dlgTributos" widgetVar="_dlgTributos" modal="true"
+                      resizable="false" showEffect="explode" hideEffect="explode">
+                <h:form id="frmTributos">
+                    <p:dataTable id="tblAgregarTributos" style="width: 800px;"
+                                 paginator ="true" paginatorPosition ="top" rows="10" var="t" 
+                                 value="#{afipBean.tipoTributoList}" selection="#{productoBean.tributoTipoList}"
+                                 emptyMessage = "No hay datos de tipos de Tributos" rowKey="#{t.idTipoTributo}">
+
+                                <f:facet name="header">Lista de Tipos de Tributos</f:facet>
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                <p:column headerText="CODIGO" style="width:50px;text-align: center">
+                                    <h:outputText value="#{t.idTipoTributo}" />
+                                </p:column>
+                                <p:column headerText="DESCRIPCION" style="width:50px;text-align: center">
+                                    <h:outputText value="#{t.descripcion}" />
+                                </p:column>
+                                
+                        </p:dataTable>
+                    <p:commandButton value="Aceptar" onclick="PF('_dlgTributos').hide();" actionListener="#{productoBean.crearTributos()}"
+                                     icon="ui-icon-closethick" update="frmNuevoProducto"/>
+                    </h:form>                     
+            </p:dialog>
+        </ui:composition>
+
+    </body>
+</html>
